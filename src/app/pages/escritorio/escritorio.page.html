@@ -1,0 +1,34 @@
+<ion-header translucent>
+  <ion-toolbar color="primary">
+    <ion-title slot="start">{{ usuario.nombre }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="logout()">
+        <ion-icon name="log-out-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content fullscreen class="escritorio-content">
+  <div class="cards-grid">
+    <ion-card *ngFor="let proyecto of proyectos">
+      <ion-card-header>
+        <ion-card-title>{{ proyecto.nombre }}</ion-card-title>
+        <ion-card-subtitle>Jefe: {{ proyecto.jefe }}</ion-card-subtitle>
+      </ion-card-header>
+
+      <ion-card-content>
+        <p><strong>Inicio:</strong> {{ proyecto.inicio | date }}</p>
+        <p><strong>Fin:</strong> {{ proyecto.fin | date }}</p>
+        <p><strong>Equipo:</strong> {{ proyecto.equipo }} personas</p>
+      </ion-card-content>
+    </ion-card>
+  </div>
+
+  <!-- Botón flotante -->
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button (click)="abrirModal()">
+      <ion-icon name="add-outline"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</ion-content>
