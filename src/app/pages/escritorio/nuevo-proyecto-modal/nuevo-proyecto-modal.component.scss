@@ -1,0 +1,7 @@
+ion-popover {
+  /* mayor que el overlay del modal (que suele ser 200+) */
+  z-index: 9999 !important;
+}
+.modal-wrapper {
+  overflow: visible !important;
+}

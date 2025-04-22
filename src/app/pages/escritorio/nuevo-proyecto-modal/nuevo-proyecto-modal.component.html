@@ -1,3 +1,74 @@
-<p>
-  nuevo-proyecto-modal works!
-</p>
+<ion-header translucent>
+  <ion-toolbar color="primary">
+    <ion-title>Nuevo Proyecto</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="cerrarModal()">
+        <ion-icon slot="icon-only" name="close-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content fullscreen class="ion-padding">
+
+  <form [formGroup]="formProyecto">
+
+    <!-- Nombre del proyecto -->
+    <ion-item>
+      <ion-label position="stacked">Nombre del proyecto</ion-label>
+      <ion-input
+        type="text"
+        formControlName="nombre"
+        placeholder="Ej: Sistema de Inventarios">
+      </ion-input>
+    </ion-item>
+
+    <!-- Campo de fecha usando type="date" nativo -->
+    <ion-item>
+      <ion-label position="stacked">Fecha del proyecto</ion-label>
+      <ion-input
+        type="date"
+        formControlName="fecha">
+      </ion-input>
+    </ion-item>
+
+    <!-- Jefe del proyecto -->
+    <ion-item>
+      <ion-label position="stacked">Jefe de proyecto</ion-label>
+      <ion-input
+        type="text"
+        formControlName="jefe"
+        placeholder="Ej: Juan Pérez">
+      </ion-input>
+    </ion-item>
+
+    <!-- Tamaño del equipo -->
+    <ion-item>
+      <ion-label position="stacked">Tamaño del equipo</ion-label>
+      <ion-input
+        type="number"
+        formControlName="equipo"
+        placeholder="Ej: 5">
+      </ion-input>
+    </ion-item>
+
+    <!-- Botón para guardar -->
+    <ion-button
+      expand="block"
+      class="ion-margin-top"
+      color="primary"
+      (click)="guardarProyecto()">
+      Guardar
+    </ion-button>
+
+    <!-- Botón para cancelar -->
+    <ion-button
+      expand="block"
+      fill="outline"
+      color="medium"
+      (click)="cerrarModal()">
+      Cancelar
+    </ion-button>
+
+  </form>
+</ion-content>
