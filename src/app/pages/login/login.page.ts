@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { LoginService } from '../../services/login.service';
 import { Router } from '@angular/router';
 import { ToastController, LoadingController } from '@ionic/angular';
+import { AuthService, Sesion } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -19,7 +20,8 @@ export class LoginPage {
     private loginService: LoginService,
     private router: Router,
     private toastCtrl: ToastController,
-    private loadingCtrl: LoadingController
+    private loadingCtrl: LoadingController,
+    private authSrv: AuthService,
   ) {
     this.form = this.fb.group({
       email: ['', [Validators.required, Validators.email]],   
@@ -40,12 +42,20 @@ export class LoginPage {
       this.form.value.email,
       this.form.value.contrasena
     ).subscribe({
-      next: async () => {
+      next: async (res) => {
         await this.loading.dismiss();
         // Aquí puedes guardar el usuario en localStorage si quieres
+        const sesion: Sesion = {
+          id:    res.id,
+          nombre:res.nombre,
+          rol:   res.rol,
+          email: this.form.value.email        
+         };
+  
+        this.authSrv.setUserSession(sesion);
         this.router.navigate(['/escritorio']);
       },
-      error: async () => {
+      error: async (res) => {
         await this.loading.dismiss();
         this.showToast('Credenciales incorrectas. Angular');
       }

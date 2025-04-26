@@ -1,7 +1,10 @@
 import { Component } from '@angular/core';
 import { ModalController } from '@ionic/angular';
+import { Router } from '@angular/router';
+import { AuthService, Sesion } from '../../services/auth.service';
 import { NuevoProyectoModalComponent } from './nuevo-proyecto-modal/nuevo-proyecto-modal.component'
 import { ProyectosService, Proyecto } from '../../services/proyectos.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-escritorio',
@@ -10,24 +13,32 @@ import { ProyectosService, Proyecto } from '../../services/proyectos.service';
   standalone: false,
 })
 export class EscritorioPage {
-  usuario = {
-    nombre: 'Carlos Ruiz'
-  };
-
-  proyectos: Proyecto[] = [];
+  sesion!: Sesion | null;          // ⇠ aquí guardamos la sesión
+  proyectos$: Observable<any[]> | undefined;   // si ya traes proyectos como stream
+  proyectos: any[] = []; 
+  modalCtrl: any;
 
   constructor(
-    private modalCtrl: ModalController,
-    private proyectosSvc: ProyectosService
+    private authSrv: AuthService,
+    private router: Router,
+    
   ){}
 
   ionViewWillEnter() {
-    this.proyectosSvc.lista().subscribe(data => this.proyectos = data);
+    this.sesion = this.authSrv.getUserSession();
+
+    /* si quieres redirigir si no hay sesión */
+    if (!this.sesion) {
+      this.router.navigate(['/login'], { replaceUrl: true });
+      return;
+    }
+
+   
   }
 
   logout() {
-    // Lógica de cerrar sesión
-    console.log('Sesión cerrada');
+    this.authSrv.clearSession();
+    this.router.navigate(['/login'], { replaceUrl: true });
   }
 
   async abrirModal() {
