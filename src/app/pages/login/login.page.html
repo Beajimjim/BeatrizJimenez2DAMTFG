@@ -3,7 +3,7 @@
     <div class="login-card">
       <div class="logo">
         <ion-icon name="lock-closed-outline"></ion-icon>
-        <h1>Smart3Z</h1>        
+        <h1>Smart3Z</h1>
       </div>
 
       <ion-card>
@@ -12,23 +12,24 @@
         </ion-card-header>
 
         <ion-card-content>
-          <form>
+          <form [formGroup]="form" (ngSubmit)="login()">
             <ion-item>
               <ion-label position="floating">Correo electrónico</ion-label>
-              <ion-input type="email" required></ion-input>
+              <ion-input formControlName="email" type="email" required></ion-input>
             </ion-item>
 
             <ion-item>
               <ion-label position="floating">Contraseña</ion-label>
-              <ion-input type="password" required></ion-input>
+              <ion-input formControlName="contrasena" type="password" required></ion-input>
             </ion-item>
 
-            <ion-button expand="block" color="primary" class="ion-margin-top">
+            <ion-button expand="block" color="primary" class="ion-margin-top" type="submit">
               Entrar
             </ion-button>
           </form>
         </ion-card-content>
       </ion-card>
+
       <div class="login-footer">
         <p>© Smart3Z 2025 · Todos los derechos reservados</p>
       </div>

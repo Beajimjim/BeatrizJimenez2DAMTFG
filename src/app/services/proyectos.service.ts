@@ -3,40 +3,35 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 export interface Proyecto {
-  id?:    number;
-  nombre: string;
-  jefe:   string;
-  inicio: string;   // yyyy‑MM‑dd
-  fin:    string;   // yyyy‑MM‑dd
-  equipo: number;
+  id_proyecto?:    number;
+  id_departamento: number;
+  id_jefe_pm:      number;
+  nombre:          string;
+  descripcion:     string;
+  fecha_inicio:    string;
+  fecha_fin:       string;
+  estado:          'EN_CURSO'|'PAUSADO'|'FINALIZADO';
 }
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class ProyectosService {
-
-  private api = 'http://localhost/TFG/api/proyectos.php';
+  private url = 'http://localhost/TFG/api/proyectos';
 
   constructor(private http: HttpClient) {}
 
-  /** Lista todos los proyectos */
-  listar(): Observable<Proyecto[]> {
-    return this.http.get<Proyecto[]>(this.api);
+  lista(): Observable<Proyecto[]>{
+    return this.http.get<Proyecto[]>(this.url); 
   }
-
-  /** Crea un proyecto */
-  crear(p: Proyecto): Observable<any> {
-    return this.http.post(this.api, p);
+  uno(id: number): Observable<Proyecto>{ 
+    return this.http.get<Proyecto>(`${this.url}?id=${id}`); 
   }
-
-  /** Editar (si implementas PUT en PHP) */
-  actualizar(p: Proyecto): Observable<any> {
-    return this.http.put(`${this.api}?id=${p.id}`, p);
+  crear(p: Proyecto){ 
+    return this.http.post(this.url, p); 
   }
-
-  /** Eliminar (si implementas DELETE en PHP) */
-  borrar(id: number): Observable<any> {
-    return this.http.delete(`${this.api}?id=${id}`);
+  actualizar(id:number, p: Proyecto){ 
+    return this.http.put(`${this.url}?id=${id}`, p); 
+  }
+  borrar(id: number){ 
+    return this.http.delete(`${this.url}?id=${id}`); 
   }
 }

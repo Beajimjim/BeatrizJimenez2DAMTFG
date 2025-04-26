@@ -14,13 +14,13 @@
     <ion-card *ngFor="let  p of proyectos">
       <ion-card-header>
         <ion-card-title>{{ p.nombre }}</ion-card-title>
-        <ion-card-subtitle>Jefe: {{ p.jefe }}</ion-card-subtitle>
+        <ion-card-subtitle>Jefe: {{ p.id_jefe_pm }}</ion-card-subtitle>
       </ion-card-header>
 
       <ion-card-content>
-        <p><strong>Inicio:</strong> {{ p.inicio | date }}</p>   
-        <p><strong>Fin:</strong> {{ p.fin | date }}</p>      
-        <p><strong>Equipo:</strong> {{ p.equipo }} personas</p>
+        <p><strong>Inicio:</strong> {{ p.fecha_inicio| date }}</p>   
+        <p><strong>Fin:</strong> {{  p.fecha_fin| date }}</p>      
+        <p><strong>Equipo:</strong> </p>
       </ion-card-content>
     </ion-card>
   </div>

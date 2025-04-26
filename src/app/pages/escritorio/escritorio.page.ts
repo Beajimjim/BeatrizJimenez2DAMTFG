@@ -22,7 +22,7 @@ export class EscritorioPage {
   ){}
 
   ionViewWillEnter() {
-    this.proyectosSvc.listar().subscribe(data => this.proyectos = data);
+    this.proyectosSvc.lista().subscribe(data => this.proyectos = data);
   }
 
   logout() {
