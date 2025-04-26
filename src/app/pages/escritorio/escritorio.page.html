@@ -11,16 +11,16 @@
 
 <ion-content fullscreen class="escritorio-content">
   <div class="cards-grid">
-    <ion-card *ngFor="let proyecto of proyectos">
+    <ion-card *ngFor="let  p of proyectos">
       <ion-card-header>
-        <ion-card-title>{{ proyecto.nombre }}</ion-card-title>
-        <ion-card-subtitle>Jefe: {{ proyecto.jefe }}</ion-card-subtitle>
+        <ion-card-title>{{ p.nombre }}</ion-card-title>
+        <ion-card-subtitle>Jefe: {{ p.jefe }}</ion-card-subtitle>
       </ion-card-header>
 
       <ion-card-content>
-        <p><strong>Inicio:</strong> {{ proyecto.inicio | date }}</p>
-        <p><strong>Fin:</strong> {{ proyecto.fin | date }}</p>
-        <p><strong>Equipo:</strong> {{ proyecto.equipo }} personas</p>
+        <p><strong>Inicio:</strong> {{ p.inicio | date }}</p>   
+        <p><strong>Fin:</strong> {{ p.fin | date }}</p>      
+        <p><strong>Equipo:</strong> {{ p.equipo }} personas</p>
       </ion-card-content>
     </ion-card>
   </div>

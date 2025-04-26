@@ -18,8 +18,13 @@ const routes: Routes = [
   {
     path: 'escritorio',
     loadChildren: () => import('./pages/escritorio/escritorio.module').then( m => m.EscritorioPageModule)
+  },
+  {
+    path: 'supercontrolador',
+    loadComponent: () =>
+      import('./pages/supercontrolador/supercontrolador.page')
+        .then(m => m.SupercontroladorPage)   // <‑‑ página stand‑alone
   }
-  
 ];
 
 @NgModule({

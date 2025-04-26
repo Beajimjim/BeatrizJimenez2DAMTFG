@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { NuevoProyectoModalComponent } from './nuevo-proyecto-modal/nuevo-proyecto-modal.component'
+import { ProyectosService, Proyecto } from '../../services/proyectos.service';
 
 @Component({
   selector: 'app-escritorio',
@@ -13,25 +14,16 @@ export class EscritorioPage {
     nombre: 'Carlos Ruiz'
   };
 
-  proyectos = [
-    {
-      nombre: 'Proyecto Alfa',
-      jefe: 'Laura Martínez',
-      inicio: new Date('2025-03-01'),
-      fin: new Date('2025-05-31'),
-      equipo: 8
-    },
-    {
-      nombre: 'Proyecto Beta',
-      jefe: 'Sergio Gómez',
-      inicio: new Date('2025-02-15'),
-      fin: new Date('2025-06-01'),
-      equipo: 5
-    }
-    // Estos datos luego vendrán de la base de datos
-  ];
+  proyectos: Proyecto[] = [];
 
-  constructor(private modalCtrl: ModalController) {}
+  constructor(
+    private modalCtrl: ModalController,
+    private proyectosSvc: ProyectosService
+  ){}
+
+  ionViewWillEnter() {
+    this.proyectosSvc.listar().subscribe(data => this.proyectos = data);
+  }
 
   logout() {
     // Lógica de cerrar sesión

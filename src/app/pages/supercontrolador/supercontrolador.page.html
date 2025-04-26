@@ -1,0 +1,34 @@
+<ion-split-pane when="md">          <!-- Menú fijo en ≥ md, deslizable en < md -->
+  
+  <!-- ===== MENÚ LATERAL ===== -->
+  <ion-menu content-id="sc-content" side="start">
+    <ion-header>
+      <ion-toolbar color="primary">
+        <ion-title>Smart3Z</ion-title>
+      </ion-toolbar>
+      <ion-item lines="none">
+        <ion-label>{{ usuario }}</ion-label>
+      </ion-item>
+    </ion-header>
+
+    <ion-content>
+      <ion-list>
+        <ion-menu-toggle auto-hide="false" *ngFor="let item of menu">
+          <ion-item routerLinkActive="item-selected" [routerLink]="item.path" lines="none">
+            <ion-icon slot="start" [name]="item.icon"></ion-icon>
+            <ion-label>{{ item.label }}</ion-label>
+          </ion-item>
+        </ion-menu-toggle>
+      </ion-list>
+    </ion-content>
+  </ion-menu>
+
+  <!-- ===== CONTENIDO PRINCIPAL ===== -->
+  <ion-content id="sc-content" fullscreen class="sc-main">
+    <section class="sc-card">
+      <h1>Super Controlador</h1>
+      <p>Aquí podrás gestionar módulos, estadísticas y todo lo que necesites.</p>
+    </section>
+  </ion-content>
+
+</ion-split-pane>
