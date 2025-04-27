@@ -3,7 +3,7 @@ import { ModalController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { AuthService, Sesion } from '../../services/auth.service';
 import { NuevoProyectoModalComponent } from './nuevo-proyecto-modal/nuevo-proyecto-modal.component'
-import { ProyectosService, Proyecto } from '../../services/proyectos.service';
+import { ProyectoService } from '../../services/proyectos.service';
 import { Observable } from 'rxjs';
 
 @Component({
@@ -21,6 +21,7 @@ export class EscritorioPage {
   constructor(
     private authSrv: AuthService,
     private router: Router,
+    private proyectoSrv: ProyectoService,
     
   ){}
 
@@ -33,7 +34,8 @@ export class EscritorioPage {
       return;
     }
 
-   
+    this.proyectoSrv.proyectosParaUsuario(this.sesion.id)    
+        .subscribe(projs => this.proyectos = projs);  
   }
 
   logout() {
