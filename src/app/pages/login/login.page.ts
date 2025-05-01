@@ -49,9 +49,10 @@ export class LoginPage {
           id:    res.id,
           nombre:res.nombre,
           rol:   res.rol,
-          email: this.form.value.email        
-         };
-  
+          email: this.form.value.email,
+          id_empresa: res.id_empresa,
+          id_departamento:res.id_departamento      // res.id_empresa devuelto por PHP
+        };
         this.authSrv.setUserSession(sesion);
         this.router.navigate(['/escritorio']);
       },

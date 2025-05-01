@@ -3,10 +3,12 @@ import { Injectable } from '@angular/core';
 const KEY = 'smart3z-user';   // donde guardaremos la sesión
 
 export interface Sesion {
-  id:    number;
-  nombre:string;
-  rol:   'ADMIN' | 'PM' | 'EMP';
+  id: number;
+  nombre: string;
+  rol: 'ADMIN' | 'PM' | 'EMP';
   email: string;
+  id_empresa: number;
+  id_departamento?: number;          // ← nuevo
 }
 
 @Injectable({ providedIn: 'root' })

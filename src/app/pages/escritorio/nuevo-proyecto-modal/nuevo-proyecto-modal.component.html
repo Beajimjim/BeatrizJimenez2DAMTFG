@@ -9,82 +9,57 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content fullscreen class="ion-padding">
-
+<ion-content class="ion-padding" fullscreen>
   <form [formGroup]="formProyecto">
 
-    <!-- Nombre del proyecto -->
+    <!-- nombre -->
     <ion-item>
-      <ion-label position="stacked">Nombre del proyecto</ion-label>
-      <ion-input
-        type="text"
-        formControlName="nombre"
-        placeholder="Ej: Sistema de Inventarios">
-      </ion-input>
+      <ion-label position="stacked">Nombre</ion-label>
+      <ion-input formControlName="nombre"></ion-input>
     </ion-item>
 
-    <!-- Campo de fecha usando type="date" nativo -->
+    <!-- jefe PM -->
     <ion-item>
-      <ion-label position="stacked">Jefe de proyecto</ion-label>
-      <ion-input
-        type="date"
-        formControlName="fecha">
-      </ion-input>
+      <ion-label position="stacked">Jefe de Proyecto</ion-label>
+      <ion-select formControlName="id_jefe_pm" interface="popover">
+        <ion-select-option *ngFor="let pm of pms" [value]="pm.id_usuario">
+          {{ pm.nombre }}
+        </ion-select-option>
+      </ion-select>
     </ion-item>
 
-    <!-- Jefe del proyecto -->
+    <!-- departamento -->
     <ion-item>
-      <ion-label position="stacked">Fecha de inicio</ion-label>
-      <ion-input
-        type="text"
-        formControlName="jefe"
-        placeholder="Ej: Juan Pérez">
-      </ion-input>
+      <ion-label position="stacked">Departamento</ion-label>
+      <ion-select formControlName="id_departamento" interface="popover">
+        <ion-select-option *ngFor="let d of departamentos" [value]="d.id_departamento">
+          {{ d.nombre }}
+        </ion-select-option>
+      </ion-select>
     </ion-item>
 
-    <!-- Tamaño del equipo -->
+    <!-- fechas y estado -->
     <ion-item>
-      <ion-label position="stacked">Fecha de fin</ion-label>
-      <ion-input
-        type="number"
-        formControlName="equipo"
-        placeholder="Ej: 5">
-      </ion-input>
+      <ion-label position="stacked">Fecha inicio</ion-label>
+      <ion-input type="date" formControlName="fecha_inicio"></ion-input>
     </ion-item>
-
+    <ion-item>
+      <ion-label position="stacked">Fecha fin</ion-label>
+      <ion-input type="date" formControlName="fecha_fin"></ion-input>
+    </ion-item>
     <ion-item>
       <ion-label position="stacked">Estado</ion-label>
-      <ion-input
-        type="number"
-        formControlName="equipo"
-        placeholder="Ej: 5">
-      </ion-input>
+      <ion-select formControlName="estado" interface="popover">
+        <ion-select-option value="EN_CURSO">En curso</ion-select-option>
+        <ion-select-option value="PAUSADO">Pausado</ion-select-option>
+        <ion-select-option value="FINALIZADO">Finalizado</ion-select-option>
+      </ion-select>
     </ion-item>
 
-    <ion-item>
-      <ion-label position="stacked">Estado</ion-label>
-      <ion-input
-        type="number"
-        formControlName="equipo"
-        placeholder="Ej: 5">
-      </ion-input>
-    </ion-item>
-
-    <!-- Botón para guardar -->
-    <ion-button
-      expand="block"
-      class="ion-margin-top"
-      color="primary"
-      (click)="guardarProyecto()">
+    <ion-button expand="block" color="primary" (click)="guardarProyecto()">
       Guardar
     </ion-button>
-
-    <!-- Botón para cancelar -->
-    <ion-button
-      expand="block"
-      fill="outline"
-      color="medium"
-      (click)="cerrarModal()">
+    <ion-button expand="block" fill="outline" (click)="cerrarModal()">
       Cancelar
     </ion-button>
 
