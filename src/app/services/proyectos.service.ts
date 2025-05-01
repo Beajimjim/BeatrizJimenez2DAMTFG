@@ -15,28 +15,33 @@ export interface Departamento {
 
 @Injectable({ providedIn: 'root' })
 export class ProyectoService {
-  private base = 'http://localhost/TFG/api';
+  private api = 'http://localhost/TFG/api';
 
   constructor(private http: HttpClient) {}
 
   getProyectosParaUsuario(id_usuario: number): Observable<any[]> {
     return this.http.post<any[]>(
-      `${this.base}/proyectos.php`,
+      `${this.api}/proyectos.php`,
       { id_usuario }
     );
   }
 
   getPMs(idEmpresa: number): Observable<PM[]> {
-    return this.http.post<PM[]>(`${this.base}/pm-lista.php`, { id_empresa: idEmpresa });
+    return this.http.post<PM[]>(`${this.api}/pm-lista.php`, { id_empresa: idEmpresa });
   }
   
   /** Departamentos de una empresa */
   getDepartamentosByEmpresa(idEmpresa: number): Observable<Departamento[]> {
-    return this.http.post<Departamento[]>(`${this.base}/departamentos-lista.php`, { id_empresa: idEmpresa });
+    return this.http.post<Departamento[]>(`${this.api}/departamentos-lista.php`, { id_empresa: idEmpresa });
   }
 
   crearProyecto(payload: any): Observable<any> {
-    return this.http.post<any>(`${this.base}/proyectos.php`, payload);
+    return this.http.post<any>(`${this.api}/proyectos.php`, payload);
+  }
+
+  eliminarProyecto(id: number) {
+    // POST porque así ya lo tienes configurado
+    return this.http.post<{deleted:number}>(`${this.api}/proyectos.php`, { id_proyecto: id });
   }
 
 }

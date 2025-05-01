@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 })
 export class LoginService {
 
-  private apiURL = 'http://localhost/TFG/api/login.php';  // tu login.php real
+  private api = 'http://localhost/TFG/api/login.php';  // tu login.php real
 
   constructor(private http: HttpClient) {}
 
@@ -19,6 +19,6 @@ export class LoginService {
 
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
 
-    return this.http.post(this.apiURL, body, { headers });
+    return this.http.post(this.api, body, { headers });
   }
 }

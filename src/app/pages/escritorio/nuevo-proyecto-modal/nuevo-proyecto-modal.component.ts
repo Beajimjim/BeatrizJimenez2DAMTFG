@@ -13,7 +13,8 @@ import { ProyectoService, PM, Departamento } from 'src/app/services/proyectos.se
 })
 export class NuevoProyectoModalComponent implements OnInit {
 
-  @Input() id_empresa!: number;        // viene vía componentProps
+  @Input() id_empresa!: number;  
+
 
   formProyecto: FormGroup;
   pms:           PM[]           = [];
@@ -36,7 +37,7 @@ export class NuevoProyectoModalComponent implements OnInit {
 
   /* ===== lifecycle ===== */
   ngOnInit(): void {
-    console.log('[MODAL] Empresa =>', this.id_empresa);
+    console.log('[MODAL] Empresa =>', this.id_empresa);    
     this.cargarPMs();
     this.cargarDepartamentos();
   }

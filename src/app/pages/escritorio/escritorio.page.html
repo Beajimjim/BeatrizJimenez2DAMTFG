@@ -13,7 +13,7 @@
   <div class="cards-grid">
     <ion-card *ngFor="let  p of proyectos">
       <ion-card-header>
-        <ion-card-title>{{ p.nombre }}</ion-card-title>
+        <ion-card-title>{{ p.nombre }}</ion-card-title>        
         <ion-card-subtitle>Jefe: {{ p.jefe }}</ion-card-subtitle>
       </ion-card-header>
 
@@ -22,6 +22,14 @@
         <p><strong>Inicio:</strong> {{ p.fecha_inicio| date }}</p>   
         <p><strong>Fin:</strong> {{  p.fecha_fin| date }}</p>      
         <p><strong>Estado:</strong>{{ p.estado }} </p>
+        <ion-button
+        fill="clear"
+        color="danger"
+        size="small"
+        slot="end"
+        (click)="confirmarBorrado(p)">
+        <ion-icon name="trash-outline"></ion-icon>
+      </ion-button>
       </ion-card-content>
     </ion-card>
   </div>
