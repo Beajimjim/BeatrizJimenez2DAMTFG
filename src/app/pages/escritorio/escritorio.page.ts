@@ -16,6 +16,14 @@ export class EscritorioPage {
   sesion!: Sesion | null;
   proyectos: any[] = [];
 
+  get puedeCrear(): boolean {
+    return this.sesion?.rol === 'ADMIN' || this.sesion?.rol === 'PM';
+  }
+
+  get puedeEliminar(): boolean {
+    return this.sesion?.rol === 'ADMIN' || this.sesion?.rol === 'PM';
+  }
+
   constructor(
     private authSrv: AuthService,
     private router: Router,

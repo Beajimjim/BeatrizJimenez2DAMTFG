@@ -22,20 +22,17 @@
         <p><strong>Inicio:</strong> {{ p.fecha_inicio| date }}</p>   
         <p><strong>Fin:</strong> {{  p.fecha_fin| date }}</p>      
         <p><strong>Estado:</strong>{{ p.estado }} </p>
-        <ion-button
-        fill="clear"
-        color="danger"
-        size="small"
-        slot="end"
-        (click)="confirmarBorrado(p)">
-        <ion-icon name="trash-outline"></ion-icon>
-      </ion-button>
+        <ion-buttons slot="end" *ngIf="puedeEliminar">
+          <ion-button fill="clear" color="danger" (click)="confirmarBorrado(p)">
+            <ion-icon name="trash-outline"></ion-icon>
+          </ion-button>
+        </ion-buttons>
       </ion-card-content>
     </ion-card>
   </div>
 
   <!-- Botón flotante -->
-  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+  <ion-fab *ngIf="puedeCrear" vertical="bottom" horizontal="end" slot="fixed">
     <ion-fab-button (click)="abrirModal()">
       <ion-icon name="add-outline"></ion-icon>
     </ion-fab-button>
