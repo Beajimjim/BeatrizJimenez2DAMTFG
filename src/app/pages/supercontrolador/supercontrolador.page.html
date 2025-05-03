@@ -1,34 +1,43 @@
-<ion-split-pane when="md">          <!-- Menú fijo en ≥ md, deslizable en < md -->
-  
+<!-- Supercontrolador – plantilla con botón "Escritorio" anclado al pie del menú -->
+<ion-split-pane when="md" contentId="sc-content"><!-- Menú fijo en ≥ md, deslizable en < md -->
+
   <!-- ===== MENÚ LATERAL ===== -->
-  <ion-menu content-id="sc-content" side="start">
+  <ion-menu side="start" contentId="sc-content" type="overlay">
     <ion-header>
       <ion-toolbar color="primary">
         <ion-title>Smart3Z</ion-title>
+        <ion-buttons slot="end">
+          <ion-label>{{ usuario }}</ion-label>
+        </ion-buttons>
       </ion-toolbar>
-      <ion-item lines="none">
-        <ion-label>{{ usuario }}</ion-label>
-      </ion-item>
     </ion-header>
 
     <ion-content>
       <ion-list>
         <ion-menu-toggle auto-hide="false" *ngFor="let item of menu">
-          <ion-item routerLinkActive="item-selected" [routerLink]="item.path" lines="none">
+          <ion-item routerDirection="root"
+                    routerLinkActive="item-selected"
+                    [routerLink]="['/proyecto', proyectoId, item.path]"
+                    lines="none">
             <ion-icon slot="start" [name]="item.icon"></ion-icon>
             <ion-label>{{ item.label }}</ion-label>
           </ion-item>
         </ion-menu-toggle>
       </ion-list>
     </ion-content>
+
+    <!-- ===== BOTÓN ESCRITORIO (pie fijo) ===== -->
+    <ion-footer class="ion-no-border">
+      <ion-item routerDirection="root"
+                routerLink="/escritorio"
+                lines="none">
+        <ion-icon slot="start" name="arrow-back"></ion-icon>
+        <ion-label>Escritorio</ion-label>
+      </ion-item>
+    </ion-footer>
   </ion-menu>
 
   <!-- ===== CONTENIDO PRINCIPAL ===== -->
-  <ion-content id="sc-content" fullscreen class="sc-main">
-    <section class="sc-card">
-      <h1>Super Controlador</h1>
-      <p>Aquí podrás gestionar módulos, estadísticas y todo lo que necesites.</p>
-    </section>
-  </ion-content>
+  <ion-router-outlet id="sc-content" main></ion-router-outlet>
 
 </ion-split-pane>

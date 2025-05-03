@@ -44,4 +44,9 @@ export class ProyectoService {
     return this.http.post<{deleted:number}>(`${this.api}/proyectos.php`, { id_proyecto: id });
   }
 
+  getProyectoCompleto(id: number) {
+    // Ajusta la URL según tu API
+    return this.http.get(`${this.api}/proyectos/${id}`);
+  }
+
 }
