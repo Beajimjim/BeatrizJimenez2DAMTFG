@@ -14,15 +14,14 @@
 
     <ion-content>
       <ion-list>
-        <ion-menu-toggle auto-hide="false" *ngFor="let item of menu">
-          <ion-item routerDirection="root"
-                    routerLinkActive="item-selected"
-                   
-                    lines="none">
-            <ion-icon slot="start" [name]="item.icon"></ion-icon>
-            <ion-label>{{ item.label }}</ion-label>
-          </ion-item>
-        </ion-menu-toggle>
+        <ion-item
+          *ngFor="let item of menu"
+          (click)="seleccionarSeccion(item.path)"
+          button
+          detail="false">
+          <ion-icon slot="start" [name]="item.icon"></ion-icon>
+          <ion-label>{{ item.label }}</ion-label>
+        </ion-item>
       </ion-list>
     </ion-content>
 
@@ -41,7 +40,8 @@
   <ion-router-outlet id="sc-content" main>
 
     <ion-content *ngIf="proyecto" class="ion-padding">
-      <!-- Título del proyecto -->
+      <div *ngIf="seccionActiva === 'inicio'">
+        <!-- Título del proyecto -->
       <h1 class="ion-text-center">{{ proyecto.nombre }}</h1>
       <p class="ion-text-center" style="color: var(--ion-color-medium); font-style: italic;">
         Estado: {{ proyecto.estado }}
@@ -79,7 +79,13 @@
           </ion-col>
         </ion-row>
       </ion-grid>
-      <app-asignacion-usuarios></app-asignacion-usuarios>
+      </div>
+     
+      <app-asignacion-usuarios *ngIf="seccionActiva === 'asignaciones'"></app-asignacion-usuarios>
+      
+      <div *ngIf="seccionActiva === 'configuracion'">
+        <h2>Opciones de configuración</h2>
+      </div>
     </ion-content>
    
    

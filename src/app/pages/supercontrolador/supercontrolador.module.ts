@@ -17,4 +17,5 @@ export class SupercontroladorPage {
     { icon: 'home-outline', label: 'Inicio', path: '/home' },
     { icon: 'settings-outline', label: 'Configuración', path: '/escritorio' },
   ];
+seccionActiva: any;
 }

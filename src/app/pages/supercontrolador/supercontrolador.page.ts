@@ -19,11 +19,12 @@ export class SupercontroladorPage implements OnInit {
   public proyectoId!: number;
   public proyecto: any;
 
-  public menu = [
-    { label: 'Resumen',      icon: 'home-outline',   path: '/escritorio' },
-    { label: 'Módulos',      icon: 'layers-outline', path: 'modulos' },
-    { label: 'Estadísticas', icon: 'stats-chart',    path: 'estadisticas' },
+  menu = [
+    { icon: 'home-outline', label: 'Inicio', path: 'inicio' },
+    { icon: 'settings-outline', label: 'Configuración', path: 'configuracion' },
+    { icon: 'person-add-outline', label: 'Asignaciones', path: 'asignaciones' }
   ];
+  seccionActiva = 'inicio';
 
   public usuario = 'Usuario';
 
@@ -32,6 +33,10 @@ export class SupercontroladorPage implements OnInit {
     private proyectoSrv: ProyectoService,
   ) {}
 
+
+  seleccionarSeccion(path: string) {
+    this.seccionActiva = path;
+  }
   ngOnInit(): void {
     this.proyectoId = +this.route.snapshot.paramMap.get('id')!;
     console.log(this.proyectoId);
