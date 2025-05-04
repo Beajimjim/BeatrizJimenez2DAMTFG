@@ -33,14 +33,21 @@ export class SupercontroladorPage implements OnInit {
 
   ngOnInit(): void {
     this.proyectoId = +this.route.snapshot.paramMap.get('id')!;
+    console.log(this.proyectoId);
+    
     // (opcional) Si quisieras reaccionar a cambios dinámicos:
     // this.route.paramMap.subscribe(p => this.proyectoId = +p.get('id')!);
     this.cargarProyecto();
+    
+    
   }
 
   private cargarProyecto(): void {
     this.proyectoSrv.getProyectoCompleto(this.proyectoId).subscribe({
-      next : (data: any) => (this.proyecto = data),
+      next : (data: any) => {
+        console.log('Proyecto recibido:', data);  // Agrega esto
+        this.proyecto = data;
+      },
       error: (err: any)  => console.error('Error cargando proyecto', err),
     });
   }

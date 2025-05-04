@@ -45,8 +45,13 @@ export class ProyectoService {
   }
 
   getProyectoCompleto(id: number) {
-    // Ajusta la URL según tu API
-    return this.http.get(`${this.api}/proyectos/${id}`);
+    const payload = {
+      id_proyecto: id,
+      detalle: true
+    };
+    console.log('Enviando payload:', payload); // ✅ Asegura que esté correcto
+    return this.http.post(`${this.api}/proyectos.php`, payload);
   }
+  
 
 }
