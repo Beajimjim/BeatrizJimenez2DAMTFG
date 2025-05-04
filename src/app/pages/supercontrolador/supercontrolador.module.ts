@@ -2,11 +2,12 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import { AsignacionUsuariosComponent } from "./asignacion-usuarios/asignacion-usuarios.component";
+import { TareasComponent } from './tareas/tareas.component';
 
 @Component({
   selector: 'app-supercontrolador',
   standalone: true,
-  imports: [CommonModule, IonicModule, AsignacionUsuariosComponent],
+  imports: [CommonModule, IonicModule, AsignacionUsuariosComponent,TareasComponent],
   templateUrl: './supercontrolador.page.html',
   styleUrls: ['./supercontrolador.page.scss'],
 })
@@ -18,4 +19,5 @@ export class SupercontroladorPage {
     { icon: 'settings-outline', label: 'Configuración', path: '/escritorio' },
   ];
 seccionActiva: any;
+proyectoId: number;
 }

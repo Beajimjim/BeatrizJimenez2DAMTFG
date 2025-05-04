@@ -82,10 +82,7 @@
       </div>
      
       <app-asignacion-usuarios *ngIf="seccionActiva === 'asignaciones'"></app-asignacion-usuarios>
-      
-      <div *ngIf="seccionActiva === 'configuracion'">
-        <h2>Opciones de configuración</h2>
-      </div>
+      <app-tareas *ngIf="seccionActiva === 'tareas'" [proyectoId]="proyectoId"></app-tareas>     
     </ion-content>
    
    

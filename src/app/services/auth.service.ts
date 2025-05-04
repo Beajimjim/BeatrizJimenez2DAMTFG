@@ -11,6 +11,8 @@ export interface Sesion {
   id_departamento?: number;          // ← nuevo
 }
 
+export const SESSION_KEY = 'sesion';
+
 @Injectable({ providedIn: 'root' })
 export class AuthService {
 
