@@ -17,7 +17,7 @@
         <ion-menu-toggle auto-hide="false" *ngFor="let item of menu">
           <ion-item routerDirection="root"
                     routerLinkActive="item-selected"
-                    [routerLink]="['/proyecto', proyectoId, item.path]"
+                   
                     lines="none">
             <ion-icon slot="start" [name]="item.icon"></ion-icon>
             <ion-label>{{ item.label }}</ion-label>
@@ -79,8 +79,10 @@
           </ion-col>
         </ion-row>
       </ion-grid>
+      <app-asignacion-usuarios></app-asignacion-usuarios>
     </ion-content>
-    
+   
+   
   </ion-router-outlet>
 
 </ion-split-pane>

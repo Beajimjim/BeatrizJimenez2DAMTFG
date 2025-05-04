@@ -3,6 +3,7 @@ import { ActivatedRoute, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import { ProyectoService } from '../../services/proyectos.service';
+import { AsignacionUsuariosComponent } from './asignacion-usuarios/asignacion-usuarios.component';
 
 @Component({
   standalone: true,
@@ -10,7 +11,7 @@ import { ProyectoService } from '../../services/proyectos.service';
   templateUrl: './supercontrolador.page.html',
   styleUrls: ['./supercontrolador.page.scss'],
   // ⬇️ Módulos que necesita la plantilla
-  imports: [CommonModule, IonicModule, RouterModule],
+  imports: [CommonModule, IonicModule, RouterModule,AsignacionUsuariosComponent],
 })
 export class SupercontroladorPage implements OnInit {
 

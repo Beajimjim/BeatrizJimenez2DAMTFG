@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
+import { AsignacionUsuariosComponent } from "./asignacion-usuarios/asignacion-usuarios.component";
 
 @Component({
   selector: 'app-supercontrolador',
   standalone: true,
-  imports: [CommonModule, IonicModule],
+  imports: [CommonModule, IonicModule, AsignacionUsuariosComponent],
   templateUrl: './supercontrolador.page.html',
   styleUrls: ['./supercontrolador.page.scss'],
 })
