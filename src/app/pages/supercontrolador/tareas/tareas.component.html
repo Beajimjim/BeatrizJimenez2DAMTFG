@@ -1,7 +1,21 @@
-<!-- Formulario -->
+<ion-header>
+  <ion-toolbar color="light">
+    <ion-title>Tareas del Proyecto</ion-title>
+    <ion-buttons slot="end" *ngIf="!mostrarFormulario">
+      <ion-button (click)="mostrarFormulario = true; tareaEditandoId = null; tareaForm.reset({ estado: 'pendiente' })">
+        <ion-icon name="add-circle-outline" slot="start"></ion-icon>
+        Añadir Tarea
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<!-- FORMULARIO -->
 <ion-card *ngIf="mostrarFormulario">
   <ion-card-header>
-    <ion-card-title>{{ tareaEditandoId ? 'Editar tarea' : 'Crear nueva tarea' }}</ion-card-title>
+    <ion-card-title>
+      {{ tareaEditandoId ? 'Editar Tarea' : 'Nueva Tarea' }}
+    </ion-card-title>
   </ion-card-header>
   <ion-card-content>
     <form [formGroup]="tareaForm" (ngSubmit)="crearTarea()">
@@ -30,9 +44,10 @@
         <ion-input type="number" formControlName="horas" min="1" required></ion-input>
       </ion-item>
 
+      <!-- Estado como lista desplegable -->
       <ion-item>
         <ion-label position="stacked">Estado</ion-label>
-        <ion-select formControlName="estado" interface="popover">
+        <ion-select formControlName="estado" placeholder="Seleccionar estado">
           <ion-select-option value="pendiente">Pendiente</ion-select-option>
           <ion-select-option value="en curso">En curso</ion-select-option>
           <ion-select-option value="finalizada">Finalizada</ion-select-option>
@@ -52,7 +67,6 @@
       <ion-button expand="block" type="submit" [disabled]="tareaForm.invalid">
         {{ tareaEditandoId ? 'Actualizar tarea' : 'Guardar tarea' }}
       </ion-button>
-
       <ion-button expand="block" fill="outline" color="medium" (click)="cancelarEdicion()">
         Cancelar
       </ion-button>
@@ -60,29 +74,25 @@
   </ion-card-content>
 </ion-card>
 
-<!-- Lista de tareas -->
+<!-- LISTA DE TAREAS -->
 <ng-container *ngIf="!mostrarFormulario">
   <ion-card *ngFor="let tarea of tareas">
     <ion-card-header>
-      <!-- Estado de la tarea como chip -->
-      <ion-chip [color]="getEstadoColor(tarea.estado)">
-        <ion-label>{{ tarea.estado | titlecase }}</ion-label>
-      </ion-chip>
+      <ion-card-subtitle [color]="tarea.estado === 'pendiente' ? 'warning' : (tarea.estado === 'en curso' ? 'tertiary' : 'success')">
+        {{ tarea.estado | titlecase }}
+      </ion-card-subtitle>
       <ion-card-title>{{ tarea.nombre }}</ion-card-title>
     </ion-card-header>
-
     <ion-card-content>
-      <p><strong>Descripción:</strong> {{ tarea.descripcion }}</p>
-      <p><strong>Fechas:</strong> {{ tarea.fecha_inicio }} - {{ tarea.fecha_fin }}</p>
+      <p><strong>Inicio:</strong> {{ tarea.fecha_inicio }}</p>
+      <p><strong>Fin:</strong> {{ tarea.fecha_fin }}</p>
       <p><strong>Horas:</strong> {{ tarea.horas }}</p>
       <p><strong>Asignado a:</strong> {{ tarea.nombre_usuario || 'Sin asignar' }}</p>
-
-      <ion-button fill="clear" color="primary" (click)="editarTarea(tarea)">
-        <ion-icon slot="icon-only" name="create"></ion-icon>
+      <ion-button fill="clear" size="small" color="primary" (click)="editarTarea(tarea)">
+        <ion-icon name="create-outline" slot="icon-only"></ion-icon>
       </ion-button>
-
-      <ion-button fill="clear" color="danger" (click)="eliminarTarea(tarea.id)">
-        <ion-icon slot="icon-only" name="trash"></ion-icon>
+      <ion-button fill="clear" size="small" color="danger" (click)="eliminarTarea(tarea.id)">
+        <ion-icon name="trash-outline" slot="icon-only"></ion-icon>
       </ion-button>
     </ion-card-content>
   </ion-card>

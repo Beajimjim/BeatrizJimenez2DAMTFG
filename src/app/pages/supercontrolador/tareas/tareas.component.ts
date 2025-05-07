@@ -128,9 +128,9 @@ export class TareasComponent implements OnInit, OnChanges {
   }
 
   cancelarEdicion() {
+    this.mostrarFormulario = false;
     this.tareaForm.reset({ estado: 'pendiente' });
     this.tareaEditandoId = null;
-    this.mostrarFormulario = false;
   }
 
   getEstadoColor(estado: string): string {
