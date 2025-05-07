@@ -29,11 +29,15 @@
       <ion-label>¿Permitir horas extra?</ion-label>
       <ion-toggle formControlName="permitirExtras"></ion-toggle>
     </ion-item>
-    
+
     <ion-item *ngIf="form.get('permitirExtras')?.value">
       <ion-label position="stacked">Máx. horas extra por semana</ion-label>
       <ion-input type="number" formControlName="horasExtraMax" min="0"></ion-input>
     </ion-item>
+
+    <ion-button expand="block" color="primary" (click)="guardarConfiguracion()" [disabled]="form.invalid">
+      Guardar configuración
+    </ion-button>
 
   </ion-card-content>
 </ion-card>

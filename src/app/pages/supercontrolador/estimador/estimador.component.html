@@ -30,7 +30,8 @@
   <div [ngSwitch]="segmentoActual">
     <app-calendar-settings *ngSwitchCase="'jornada'"></app-calendar-settings>
     <app-profile-editor *ngSwitchCase="'perfiles'"></app-profile-editor>
-    <!-- <app-results-summary *ngSwitchCase="'resumen'"></app-results-summary> -->
+    <app-resumen-estimacion *ngSwitchCase="'resumen'" [tareas]="tareasDelProyecto"></app-resumen-estimacion>
+
   </div>
 
 </ion-content>

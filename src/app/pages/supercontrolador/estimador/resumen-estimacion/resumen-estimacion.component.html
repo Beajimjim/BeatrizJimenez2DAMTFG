@@ -1,0 +1,19 @@
+<ion-card>
+  <ion-card-header>
+    <ion-card-title>Resumen de la Estimación</ion-card-title>
+  </ion-card-header>
+
+  <ion-card-content *ngIf="resultado">
+
+    <p><strong>Total de horas del proyecto:</strong> {{ totalHoras }}</p>
+
+    <p><strong>Personas necesarias (estimado):</strong> {{ resultado.personasNecesarias }}</p>
+
+    <p><strong>Coste total estimado (€):</strong> {{ resultado.costeTotal | currency:'EUR' }}</p>
+
+    <ion-note color="medium">
+      * Basado en jornada, festivos, vacaciones y perfiles definidos.
+    </ion-note>
+
+  </ion-card-content>
+</ion-card>

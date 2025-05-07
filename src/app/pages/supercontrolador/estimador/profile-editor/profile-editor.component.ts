@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
+import { EstimadorService } from 'src/app/services/estimador.service';
 
 @Component({
   selector: 'app-profile-editor',
@@ -13,7 +14,7 @@ export class ProfileEditorComponent {
   perfilForm: FormGroup;
   perfiles: any[] = [];
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private estimadorService: EstimadorService) {
     this.perfilForm = this.fb.group({
       nombre: ['', Validators.required],
       tarifa: [null, [Validators.required, Validators.min(0)]],
@@ -25,14 +26,13 @@ export class ProfileEditorComponent {
 
   agregarPerfil() {
     const perfil = { ...this.perfilForm.value };
-
-    // Si no hace horas extra, quitamos la tarifaExtra
-    if (!perfil.horasExtra) {
-      perfil.tarifaExtra = null;
-    }
-
+    if (!perfil.horasExtra) perfil.tarifaExtra = null;
+  
     this.perfiles.push(perfil);
     this.perfilForm.reset({ horasExtra: false, disponibilidad: 100 });
+  
+    // Guardar en el servicio tras cada cambio
+    this.estimadorService.setPerfiles(this.perfiles);
   }
 
   eliminarPerfil(index: number) {
