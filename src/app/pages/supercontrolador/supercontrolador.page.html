@@ -82,7 +82,8 @@
       </div>
      
       <app-asignacion-usuarios *ngIf="seccionActiva === 'asignaciones'"></app-asignacion-usuarios>
-      <app-tareas *ngIf="seccionActiva === 'tareas'" [proyectoId]="proyectoId"></app-tareas>     
+      <app-tareas *ngIf="seccionActiva === 'tareas'" [proyectoId]="proyectoId"></app-tareas>
+      <app-estimador *ngIf="seccionActiva === 'estimador'"></app-estimador>     
     </ion-content>
    
    

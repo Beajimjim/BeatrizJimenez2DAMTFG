@@ -1,0 +1,36 @@
+<ion-content class="ion-padding">
+
+  <!-- Título centrado -->
+  <h1 class="ion-text-center">Estimador de Recursos</h1>
+  <p class="ion-text-center" style="color: var(--ion-color-medium); font-style: italic;">
+    Planifica tu equipo y estima el coste del proyecto
+  </p>
+
+  <!-- Separador -->
+  <div style="height: 1px; background-color: var(--ion-color-light); margin: 16px 0;"></div>
+
+  <!-- Tabs tipo segment -->
+  <ion-segment [(ngModel)]="segmentoActual" class="custom-segment" value="jornada">
+    <ion-segment-button value="jornada">
+      <ion-label>Jornada</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="perfiles">
+      <ion-label>Perfiles</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="resumen">
+      <ion-label>Resumen</ion-label>
+    </ion-segment-button>
+  </ion-segment>
+  
+
+  <!-- Separador -->
+  <div style="height: 1px; background-color: var(--ion-color-light); margin: 16px 0;"></div>
+
+  <!-- Contenido dinámico -->
+  <div [ngSwitch]="segmentoActual">
+    <app-calendar-settings *ngSwitchCase="'jornada'"></app-calendar-settings>
+    <app-profile-editor *ngSwitchCase="'perfiles'"></app-profile-editor>
+    <!-- <app-results-summary *ngSwitchCase="'resumen'"></app-results-summary> -->
+  </div>
+
+</ion-content>

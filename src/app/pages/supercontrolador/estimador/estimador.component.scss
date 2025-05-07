@@ -1,0 +1,26 @@
+.estimador-header {
+    text-align: center;
+    margin-bottom: 1rem;
+  
+    h2 {
+      font-size: 1.4rem;
+      color: var(--ion-color-primary);
+      margin-bottom: 0.5rem;
+    }
+  }
+  
+  .custom-segment {
+    --background: #f4f5f8;
+    --indicator-color: var(--ion-color-primary);
+    --color-checked: var(--ion-color-primary);
+  }
+  .custom-segment {
+    --background: var(--ion-color-light);
+    --indicator-color: transparent; // 👈 ELIMINA la línea inferior
+    --color-checked: var(--ion-color-primary); // texto activo
+    --color: var(--ion-color-medium); // texto inactivo
+    --border-radius: 6px;
+    margin-bottom: 1rem;
+  }
+
+ 
