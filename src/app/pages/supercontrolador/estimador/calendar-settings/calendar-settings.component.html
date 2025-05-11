@@ -7,32 +7,22 @@
 
     <ion-item>
       <ion-label position="stacked">Horas por día</ion-label>
-      <ion-input type="number" min="1" max="24" formControlName="horasPorDia"></ion-input>
+      <ion-input type="number" formControlName="horasPorDia" min="1" max="24"></ion-input>
     </ion-item>
 
     <ion-item>
       <ion-label position="stacked">Días laborables por semana</ion-label>
-      <ion-input type="number" min="1" max="7" formControlName="diasLaborablesPorSemana"></ion-input>
+      <ion-input type="number" formControlName="diasLaborablesPorSemana" min="1" max="7"></ion-input>
     </ion-item>
 
     <ion-item>
       <ion-label position="stacked">Días festivos durante el proyecto</ion-label>
-      <ion-input type="number" min="0" formControlName="festivos"></ion-input>
+      <ion-input type="number" formControlName="festivos" min="0"></ion-input>
     </ion-item>
 
     <ion-item>
       <ion-label position="stacked">Días de vacaciones por trabajador</ion-label>
-      <ion-input type="number" min="0" formControlName="vacaciones"></ion-input>
-    </ion-item>
-
-    <ion-item>
-      <ion-label>¿Permitir horas extra?</ion-label>
-      <ion-toggle formControlName="permitirExtras"></ion-toggle>
-    </ion-item>
-
-    <ion-item *ngIf="form.get('permitirExtras')?.value">
-      <ion-label position="stacked">Máx. horas extra por semana</ion-label>
-      <ion-input type="number" formControlName="horasExtraMax" min="0"></ion-input>
+      <ion-input type="number" formControlName="vacaciones" min="0"></ion-input>
     </ion-item>
 
     <ion-button expand="block" color="primary" (click)="guardarConfiguracion()" [disabled]="form.invalid">

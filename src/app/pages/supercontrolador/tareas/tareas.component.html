@@ -8,7 +8,7 @@
     </p>
   </div>
 
-  <!-- BOTÓN AÑADIR (alineado derecha) -->
+  <!-- BOTÓN AÑADIR -->
   <div class="ion-text-end ion-margin-bottom" *ngIf="!mostrarFormulario">
     <ion-button size="small" fill="solid" color="primary"
       (click)="mostrarFormulario = true; tareaEditandoId = null; tareaForm.reset({ estado: 'pendiente' })">
@@ -20,7 +20,7 @@
   <!-- SEPARADOR -->
   <div style="height: 1px; background-color: var(--ion-color-light); margin-bottom: 16px;"></div>
 
-  <!-- FORMULARIO -->
+  <!-- FORMULARIO DE TAREA -->
   <ion-card *ngIf="mostrarFormulario">
     <ion-card-header>
       <ion-card-title>
@@ -29,42 +29,100 @@
     </ion-card-header>
     <ion-card-content>
       <form [formGroup]="tareaForm" (ngSubmit)="crearTarea()">
-        <!-- ... (todo igual a como ya lo tienes) ... -->
+        
+        <ion-item>
+          <ion-label position="stacked">Nombre</ion-label>
+          <ion-input formControlName="nombre" required></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="stacked">Descripción</ion-label>
+          <ion-textarea formControlName="descripcion"></ion-textarea>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="stacked">Fecha inicio</ion-label>
+          <ion-input type="date" formControlName="fecha_inicio" required></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="stacked">Fecha fin</ion-label>
+          <ion-input type="date" formControlName="fecha_fin" required></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="stacked">Horas estimadas</ion-label>
+          <ion-input type="number" formControlName="horas" min="1" required></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="stacked">Estado</ion-label>
+          <ion-select formControlName="estado" placeholder="Seleccionar estado">
+            <ion-select-option value="pendiente">Pendiente</ion-select-option>
+            <ion-select-option value="en curso">En curso</ion-select-option>
+            <ion-select-option value="finalizada">Finalizada</ion-select-option>
+          </ion-select>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="stacked">Asignar a usuario</ion-label>
+          <ion-select formControlName="id_usuario" interface="popover" placeholder="Seleccionar usuario">
+            <ion-select-option [value]="null">Sin asignar</ion-select-option>
+            <ion-select-option *ngFor="let u of usuarios" [value]="u.id_usuario">
+              {{ u.nombre }}
+            </ion-select-option>
+          </ion-select>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="stacked">Perfil requerido</ion-label>
+          <ion-select formControlName="id_perfil" placeholder="Seleccionar perfil">
+            <ion-select-option *ngFor="let p of perfiles" [value]="p.id">
+              {{ p.nombre }}
+            </ion-select-option>
+          </ion-select>
+        </ion-item>
+
+        <ion-button expand="block" type="submit" [disabled]="tareaForm.invalid">
+          {{ tareaEditandoId ? 'Actualizar tarea' : 'Guardar tarea' }}
+        </ion-button>
+        <ion-button expand="block" fill="outline" color="medium" (click)="cancelarEdicion()">
+          Cancelar
+        </ion-button>
       </form>
     </ion-card-content>
   </ion-card>
 
   <!-- LISTA DE TAREAS -->
-  <!-- LISTA DE TAREAS -->
-<ng-container *ngIf="!mostrarFormulario">
-  <ion-grid>
-    <ion-row>
-      <ion-col size="12" size-sm="6" size-md="4" size-lg="3" *ngFor="let tarea of tareas">
-        <ion-card>
-          <ion-card-header>
-            <ion-card-subtitle
-              [color]="tarea.estado === 'pendiente' ? 'warning' : (tarea.estado === 'en curso' ? 'tertiary' : 'success')">
-              {{ tarea.estado | titlecase }}
-            </ion-card-subtitle>
-            <ion-card-title>{{ tarea.nombre }}</ion-card-title>
-          </ion-card-header>
-          <ion-card-content>
-            <p><strong>Inicio:</strong> {{ tarea.fecha_inicio }}</p>
-            <p><strong>Fin:</strong> {{ tarea.fecha_fin }}</p>
-            <p><strong>Horas:</strong> {{ tarea.horas }}</p>
-            <p><strong>Asignado a:</strong> {{ tarea.nombre_usuario || 'Sin asignar' }}</p>
-            <ion-button fill="clear" size="small" color="primary" (click)="editarTarea(tarea)">
-              <ion-icon name="create-outline" slot="icon-only"></ion-icon>
-            </ion-button>
-            <ion-button fill="clear" size="small" color="danger" (click)="eliminarTarea(tarea.id)">
-              <ion-icon name="trash-outline" slot="icon-only"></ion-icon>
-            </ion-button>
-          </ion-card-content>
-        </ion-card>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
-</ng-container>
-
+  <ng-container *ngIf="!mostrarFormulario">
+    <ion-grid>
+      <ion-row>
+        <ion-col size="12" size-sm="6" size-md="4" size-lg="3" *ngFor="let tarea of tareas">
+          <ion-card>
+            <ion-card-header>
+              <ion-card-subtitle
+                [color]="tarea.estado === 'pendiente' ? 'warning' : (tarea.estado === 'en curso' ? 'tertiary' : 'success')">
+                {{ tarea.estado | titlecase }}
+              </ion-card-subtitle>
+              <ion-card-title>{{ tarea.nombre }}</ion-card-title>
+            </ion-card-header>
+            <ion-card-content>
+              <p><strong>Inicio:</strong> {{ tarea.fecha_inicio }}</p>
+              <p><strong>Fin:</strong> {{ tarea.fecha_fin }}</p>
+              <p><strong>Horas:</strong> {{ tarea.horas }}</p>
+              <p><strong>Asignado a:</strong> {{ tarea.nombre_usuario || 'Sin asignar' }}</p>
+              <p><strong>Perfil:</strong> {{ tarea.nombre_perfil || 'Sin perfil' }}</p>
+              <ion-button fill="clear" size="small" color="primary" (click)="editarTarea(tarea)">
+                <ion-icon name="create-outline" slot="icon-only"></ion-icon>
+              </ion-button>
+              <ion-button fill="clear" size="small" color="danger" (click)="eliminarTarea(tarea.id)">
+                <ion-icon name="trash-outline" slot="icon-only"></ion-icon>
+              </ion-button>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ng-container>
 
 </ion-content>

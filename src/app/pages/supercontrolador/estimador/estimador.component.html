@@ -13,10 +13,7 @@
   <ion-segment [(ngModel)]="segmentoActual" class="custom-segment" value="jornada">
     <ion-segment-button value="jornada">
       <ion-label>Jornada</ion-label>
-    </ion-segment-button>
-    <ion-segment-button value="perfiles">
-      <ion-label>Perfiles</ion-label>
-    </ion-segment-button>
+    </ion-segment-button>    
     <ion-segment-button value="resumen">
       <ion-label>Resumen</ion-label>
     </ion-segment-button>
@@ -28,8 +25,7 @@
 
   <!-- Contenido dinámico -->
   <div [ngSwitch]="segmentoActual">
-    <app-calendar-settings *ngSwitchCase="'jornada'"></app-calendar-settings>
-    <app-profile-editor *ngSwitchCase="'perfiles'"></app-profile-editor>
+    <app-calendar-settings *ngSwitchCase="'jornada'"></app-calendar-settings>    
     <app-resumen-estimacion *ngSwitchCase="'resumen'" [tareas]="tareasDelProyecto"></app-resumen-estimacion>
 
   </div>

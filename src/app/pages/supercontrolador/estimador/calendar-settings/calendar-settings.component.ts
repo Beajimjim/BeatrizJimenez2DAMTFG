@@ -1,13 +1,13 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { IonicModule } from '@ionic/angular';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { IonicModule } from '@ionic/angular';
 import { EstimadorService } from 'src/app/services/estimador.service';
 
 @Component({
   selector: 'app-calendar-settings',
   standalone: true,
-  imports: [CommonModule, IonicModule, FormsModule, ReactiveFormsModule],
+  imports: [CommonModule, IonicModule, ReactiveFormsModule],
   templateUrl: './calendar-settings.component.html',
   styleUrls: ['./calendar-settings.component.scss'],
 })
@@ -20,12 +20,12 @@ export class CalendarSettingsComponent {
       diasLaborablesPorSemana: [5, [Validators.required, Validators.min(1), Validators.max(7)]],
       festivos: [0, [Validators.required, Validators.min(0)]],
       vacaciones: [0, [Validators.required, Validators.min(0)]],
-      permitirExtras: [false],
-      horasExtraMax: [null], // No se valida aquí, porque es condicional
     });
   }
 
   guardarConfiguracion() {
-    this.estimadorService.setCalendario(this.form.value);
+    if (this.form.valid) {
+      this.estimadorService.setCalendario(this.form.value);
+    }
   }
 }

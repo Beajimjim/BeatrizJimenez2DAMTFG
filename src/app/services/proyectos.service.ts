@@ -13,6 +13,8 @@ export interface Departamento {
   nombre:          string;
 }
 export interface Tarea {
+nombre_perfil: any;
+  id_perfil: null;
   id: number;
   id_usuario: number | null;
   nombre: string;
@@ -85,5 +87,9 @@ export class ProyectoService {
   }
   actualizarTarea(id: number, payload: any) {
     return this.http.post(`${this.api}/tareas.php`, { id_tarea: id, ...payload });
+  }
+
+  getListaPerfiles(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.api}/perfiles.php`);
   }
 }

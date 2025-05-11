@@ -3,16 +3,30 @@
     <ion-card-title>Resumen de la Estimación</ion-card-title>
   </ion-card-header>
 
-  <ion-card-content *ngIf="resultado">
+  <ion-card-content *ngIf="resultadoPorPerfil.length">
 
     <p><strong>Total de horas del proyecto:</strong> {{ totalHoras }}</p>
 
-    <p><strong>Personas necesarias (estimado):</strong> {{ resultado.personasNecesarias }}</p>
+    <ion-list>
+      <ion-item *ngFor="let r of resultadoPorPerfil">
+        <ion-label>
+          <h2>{{ r.nombre }}</h2>
+          <p>Horas necesarias: {{ r.horas }}</p>
+          <p>Pico de concurrencia: {{ r.picoConcurrencia }}</p>
+          <p>Días de cobertura por vacaciones: {{ r.coberturaVacaciones }}%</p>
+          <p>Plantilla mínima requerida: {{ r.plantillaFinal }}</p>
+          <p>Recomendación: {{ r.recomendacion }}</p>
+          <p>Coste estimado: €{{ r.coste }}</p>
+        </ion-label>
+      </ion-item>
+    </ion-list>
 
-    <p><strong>Coste total estimado (€):</strong> {{ resultado.costeTotal | currency:'EUR' }}</p>
+    <ion-note color="primary">
+      <strong>Coste total estimado: </strong> {{ costeTotal | currency:'EUR' }}
+    </ion-note>
 
     <ion-note color="medium">
-      * Basado en jornada, festivos, vacaciones y perfiles definidos.
+      * Basado en jornada, festivos, vacaciones y disponibilidad por perfil.
     </ion-note>
 
   </ion-card-content>
