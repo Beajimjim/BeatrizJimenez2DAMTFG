@@ -1,14 +1,14 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
-import { AsignacionUsuariosComponent } from "./asignacion-usuarios/asignacion-usuarios.component";
 import { TareasComponent } from './tareas/tareas.component';
 import { EstimadorComponent } from "./estimador/estimador.component";
+import { GraficaGanttComponent } from './grafica-gantt/grafica-gantt.component';
 
 @Component({
   selector: 'app-supercontrolador',
   standalone: true,
-  imports: [CommonModule, IonicModule, AsignacionUsuariosComponent, TareasComponent, EstimadorComponent],
+  imports: [CommonModule, IonicModule, TareasComponent, EstimadorComponent, GraficaGanttComponent ],
   templateUrl: './supercontrolador.page.html',
   styleUrls: ['./supercontrolador.page.scss'],
 })

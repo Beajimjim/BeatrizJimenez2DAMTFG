@@ -5,6 +5,7 @@ import { IonicModule } from '@ionic/angular';
 import { ProyectoService } from '../../services/proyectos.service';
 import { TareasComponent } from './tareas/tareas.component';
 import { EstimadorComponent } from './estimador/estimador.component';
+import { GraficaGanttComponent } from './grafica-gantt/grafica-gantt.component';
 
 @Component({
   standalone: true,
@@ -12,7 +13,7 @@ import { EstimadorComponent } from './estimador/estimador.component';
   templateUrl: './supercontrolador.page.html',
   styleUrls: ['./supercontrolador.page.scss'],
   // ⬇️ Módulos que necesita la plantilla
-  imports: [CommonModule, IonicModule, RouterModule,TareasComponent,EstimadorComponent],
+  imports: [CommonModule, IonicModule, RouterModule,TareasComponent,EstimadorComponent, GraficaGanttComponent],
 })
 export class SupercontroladorPage implements OnInit {
 
@@ -23,7 +24,8 @@ export class SupercontroladorPage implements OnInit {
   menu = [
     { icon: 'home-outline', label: 'Inicio', path: 'inicio' },
     { icon: 'settings-outline', label: 'Tareas', path: 'tareas' },    
-    { icon: 'calculator-outline', label: 'Estimador', path: 'estimador' }
+    { icon: 'calculator-outline', label: 'Estimador', path: 'estimador' },
+    { icon: 'bar-chart-outline', label: 'Gantt', path: 'gantt' } 
   ];
   seccionActiva = 'inicio';
 
