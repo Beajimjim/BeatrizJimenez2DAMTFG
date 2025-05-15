@@ -23,6 +23,6 @@ throw new Error('Method not implemented.');
     { icon: 'settings-outline', label: 'Configuración', path: '/escritorio' },
   ];
 seccionActiva: any;
-proyectoId: number;
+proyectoId!: number;
 proyecto: any;
 }

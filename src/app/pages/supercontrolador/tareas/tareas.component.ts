@@ -44,7 +44,8 @@ export class TareasComponent implements OnInit, OnChanges {
       horas: [1, [Validators.required, Validators.min(1)]],
       estado: ['pendiente', Validators.required],
       id_usuario: [null],
-      id_perfil: [null, Validators.required]
+      id_perfil: [null, Validators.required],
+      dependencia_ids: [[]]  // ⬅️ nuevo campo
     });
 
     const raw = localStorage.getItem('smart3z-user');
@@ -79,7 +80,8 @@ export class TareasComponent implements OnInit, OnChanges {
     this.tareaForm.patchValue({
       ...tarea,
       id_usuario: tarea.id_usuario ?? null,
-      id_perfil: tarea.id_perfil ?? null
+      id_perfil: tarea.id_perfil ?? null,
+      dependencia_ids: tarea.dependencia_ids ? tarea.dependencia_ids.split(',').map(Number) : []
     });
   }
 
@@ -88,12 +90,14 @@ export class TareasComponent implements OnInit, OnChanges {
 
     const datos = {
       ...this.tareaForm.value,
+      dependencia_ids: (this.tareaForm.value.dependencia_ids || []).join(','),
       id_proyecto: this.proyectoId
     };
 
     const request = this.tareaEditandoId
       ? this.proyectoService.actualizarTarea(this.tareaEditandoId, datos)
       : this.proyectoService.crearTarea(datos);
+      console.log('🔽 Enviando datos a backend:', datos);
 
     request.subscribe({
       next: async () => {

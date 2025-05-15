@@ -144,4 +144,18 @@ coste: any;
     }
     return dias;
   }
+
+  getDisponibilidad(nombrePerfil: string): number {
+    const perfil = this.perfiles.find(p => p.nombre === nombrePerfil);
+    return perfil?.disponibilidad ?? 100;
+  }
+  
+  getPlantillaBase(r: any): string {
+    const disponibilidad = this.getDisponibilidad(r.nombre) / 100;
+    const horasDiarias = this.calendario.horasPorDia;
+    const diasSemana = this.calendario.diasLaborablesPorSemana;
+    const diasEfectivos = diasSemana / 7;
+    const personas = r.horas / (horasDiarias * diasEfectivos * disponibilidad);
+    return personas.toFixed(2);
+  }
 }

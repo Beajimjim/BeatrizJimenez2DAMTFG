@@ -13,6 +13,7 @@ export interface Departamento {
   nombre:          string;
 }
 export interface Tarea {
+  dependencia_ids: any;
 nombre_perfil: any;
   id_perfil: null;
   id: number;
@@ -66,11 +67,8 @@ export class ProyectoService {
     return this.http.post(`${this.api}/proyectos.php`, payload);
   }
     
-  getTareasPorProyecto(id_proyecto: number): Observable<Tarea[]> {
-    return this.http.post<Tarea[]>(
-      `${this.api}/tareas.php`,
-      { id_proyecto }
-    );
+  getTareasPorProyecto(id_proyecto: number): Observable<any[]> {
+    return this.http.post<any[]>(`${this.api}/tareas.php`, { id_proyecto });
   }
   crearTarea(payload: any): Observable<any> {
     return this.http.post(`${this.api}/tareas.php`, payload);
@@ -90,6 +88,6 @@ export class ProyectoService {
   }
 
   getListaPerfiles(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.api}/perfiles.php`);
-  }
+  return this.http.get<any[]>(`${this.api}/perfiles.php`);
+}
 }

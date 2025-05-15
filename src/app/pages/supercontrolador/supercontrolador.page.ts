@@ -30,6 +30,7 @@ export class SupercontroladorPage implements OnInit {
   seccionActiva = 'inicio';
 
   public usuario = 'Usuario';
+  
 
   constructor(
     private route: ActivatedRoute,

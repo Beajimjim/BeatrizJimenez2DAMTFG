@@ -83,6 +83,15 @@
           </ion-select>
         </ion-item>
 
+        <ion-item>
+          <ion-label position="stacked">Dependencias (tareas anteriores)</ion-label>
+          <ion-select formControlName="dependencia_ids" multiple="true" interface="popover">
+            <ion-select-option *ngFor="let t of tareas" [value]="t.id">
+              {{ t.nombre }}
+            </ion-select-option>
+          </ion-select>
+        </ion-item>
+
         <ion-button expand="block" type="submit" [disabled]="tareaForm.invalid">
           {{ tareaEditandoId ? 'Actualizar tarea' : 'Guardar tarea' }}
         </ion-button>
@@ -112,6 +121,8 @@
               <p><strong>Horas:</strong> {{ tarea.horas }}</p>
               <p><strong>Asignado a:</strong> {{ tarea.nombre_usuario || 'Sin asignar' }}</p>
               <p><strong>Perfil:</strong> {{ tarea.nombre_perfil || 'Sin perfil' }}</p>
+              <p><strong>Depende de:</strong> {{ tarea.dependencia_ids || 'Ninguna' }}</p>
+              <p><strong>Descripción:</strong> {{ tarea.descripcion || 'Sin descripción' }}</p>
               <ion-button fill="clear" size="small" color="primary" (click)="editarTarea(tarea)">
                 <ion-icon name="create-outline" slot="icon-only"></ion-icon>
               </ion-button>
