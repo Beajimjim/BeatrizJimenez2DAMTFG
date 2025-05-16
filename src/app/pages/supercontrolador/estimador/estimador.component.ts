@@ -6,6 +6,7 @@ import { CalendarSettingsComponent } from "./calendar-settings/calendar-settings
 import { ResumenEstimacionComponent } from "./resumen-estimacion/resumen-estimacion.component";
 import { ProyectoService } from 'src/app/services/proyectos.service';
 import { EstimadorService } from 'src/app/services/estimador.service';
+import { HistoricoEstimacionComponent } from './historico-estimacion/historico-estimacion.component';
 
 @Component({
   standalone: true,
@@ -17,7 +18,8 @@ import { EstimadorService } from 'src/app/services/estimador.service';
     IonicModule,
     FormsModule,
     CalendarSettingsComponent,
-    ResumenEstimacionComponent
+    ResumenEstimacionComponent,
+    HistoricoEstimacionComponent      
   ],
 })
 export class EstimadorComponent {

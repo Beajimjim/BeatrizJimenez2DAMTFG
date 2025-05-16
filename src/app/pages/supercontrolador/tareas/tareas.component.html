@@ -2,11 +2,40 @@
 
   <!-- TÍTULO -->
   <div class="ion-text-center">
-    <h1>Tareas del Proyecto</h1>
-    <p style="color: var(--ion-color-medium); font-style: italic;">
-      Gestiona y asigna las tareas necesarias
-    </p>
+    <h1>
+      Tareas del Proyecto
+      <ion-icon
+        id="tasks-info"
+        name="information-circle-outline"
+        class="info-icon"
+        aria-label="Información sobre las tareas">
+      </ion-icon>
+    </h1>   
   </div>
+  
+  <!-- Pop-over explicativo -->
+  <ion-popover
+    trigger="tasks-info"
+    trigger-action="click"     
+    size="auto"
+    side="bottom">
+  
+    <ng-template>
+      <ion-content class="ion-padding" style="min-width:260px">
+        <h3 class="ion-no-margin">Gestor de Tareas</h3>
+  
+        <p>Permite crear, editar y eliminar tareas de tu proyecto.</p>
+  
+        <p><strong>Cómo se usa:</strong></p>
+        <ul>
+          <li>Pulsa <em>Añadir Tarea</em> para crear una nueva entrada.</li>
+          <li>Rellena nombre, descripción, fechas, horas y asignaciones.</li>
+          <li>Usa los iconos ✏️ y 🗑️ para editar o borrar registros.</li>
+          <li>Configura dependencias para reflejar el orden de ejecución.</li>
+        </ul>
+      </ion-content>
+    </ng-template>
+  </ion-popover>
 
   <!-- BOTÓN AÑADIR -->
   <div class="ion-text-end ion-margin-bottom" *ngIf="!mostrarFormulario">
@@ -104,6 +133,9 @@
 
   <!-- LISTA DE TAREAS -->
   <ng-container *ngIf="!mostrarFormulario">
+    <ion-note *ngIf="tareas.length === 0" color="warning" class="ion-text-center">
+      No hay tareas registradas para este proyecto.
+    </ion-note>
     <ion-grid>
       <ion-row>
         <ion-col size="12" size-sm="6" size-md="4" size-lg="3" *ngFor="let tarea of tareas">

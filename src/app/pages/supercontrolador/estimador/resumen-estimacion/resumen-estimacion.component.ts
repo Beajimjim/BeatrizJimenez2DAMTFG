@@ -1,7 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { IonicModule } from '@ionic/angular';
+import { IonicModule, ToastController } from '@ionic/angular';
 import { EstimadorService } from 'src/app/services/estimador.service';
+import { EstimacionesService, EstimacionPayload } from 'src/app/services/estimaciones.service';
 
 @Component({
   selector: 'app-resumen-estimacion',
@@ -11,6 +12,7 @@ import { EstimadorService } from 'src/app/services/estimador.service';
 })
 export class ResumenEstimacionComponent implements OnInit {
   @Input() tareas: any[] = [];
+  @Input() proyectoId!: number; 
 
   totalHoras = 0;
   calendario: any;
@@ -28,7 +30,11 @@ coste: any;
 
   costeTotal = 0;
 
-  constructor(private estimadorService: EstimadorService) {}
+  constructor(
+    private estimadorService: EstimadorService,
+    private estimacionesSrv: EstimacionesService, 
+    private toast: ToastController 
+  ) {}
 
   ngOnInit() {
     if (!this.tareas?.length) return;
@@ -158,4 +164,36 @@ coste: any;
     const personas = r.horas / (horasDiarias * diasEfectivos * disponibilidad);
     return personas.toFixed(2);
   }
+
+  async guardar() {
+    if (!this.proyectoId || !this.calendario) return;
+  
+    // ② — crea el payload con los OBJETOS, no con cadenas
+    const payload: EstimacionPayload = {
+      id_proyecto     : this.proyectoId,
+      total_horas     : this.totalHoras,
+      coste_total     : this.costeTotal,
+      resumen_json    : this.resultadoPorPerfil, // <-- sin JSON.stringify
+      calendario_json : this.calendario          // idem
+    };
+  
+    this.estimacionesSrv.crearEstimacion(payload).subscribe({
+      next : async () => {
+        (await this.toast.create({
+          message : 'Estimación guardada ✔️',
+          duration: 2000,
+          color   : 'success'
+        })).present();
+      },
+      error: async err => {
+        console.error(err);
+        (await this.toast.create({
+          message : 'No se pudo guardar la estimación',
+          duration: 2000,
+          color   : 'danger'
+        })).present();
+      }
+    });
+  }
+  
 }

@@ -42,10 +42,48 @@
     <ion-content *ngIf="proyecto" class="ion-padding">
       <div *ngIf="seccionActiva === 'inicio'">
         <!-- Título del proyecto -->
-      <h1 class="ion-text-center">{{ proyecto.nombre }}</h1>
-      <p class="ion-text-center" style="color: var(--ion-color-medium); font-style: italic;">
-        Estado: {{ proyecto.estado }}
-      </p>
+        <h1 class="ion-text-center">
+          {{ proyecto.nombre }}
+          <ion-icon
+            id="project-info"
+            name="information-circle-outline"
+            class="info-icon"
+            aria-label="Información sobre el proyecto">
+          </ion-icon>
+        </h1>
+        
+        <p class="ion-text-center" style="color: var(--ion-color-medium); font-style: italic;">
+          Estado: {{ proyecto.estado }}
+        </p>
+        
+        <!-- Pop-over con la explicación -->
+        <ion-popover
+          trigger="project-info"
+          trigger-action="click"     
+          show-backdrop="false"
+          size="auto"
+          side="bottom">
+        
+          <ng-template>
+            <ion-content class="ion-padding" style="min-width:260px">
+              <h3 class="ion-no-margin">Proyecto: {{ proyecto.nombre }}</h3>
+        
+              <p>Esta sección muestra la información general del proyecto.</p>
+        
+              <p><strong>Qué encontrarás aquí:</strong></p>
+              <ul>
+                <li>Descripción y objetivos principales.</li>
+                <li>Fechas de inicio y fin previstas.</li>
+                <li>Departamento responsable y jefe de proyecto.</li>
+                <li>Estado actual: <em>Planificado, En curso, Finalizado…</em></li>
+              </ul>
+        
+              <p class="ion-margin-top">
+                Usa el menú lateral para acceder a <em>Tareas</em>, <em>Estimador</em> o <em>Gráfica Gantt</em>.
+              </p>
+            </ion-content>
+          </ng-template>
+        </ion-popover>
     
       <!-- Separador visual -->
       <div style="height: 1px; background-color: var(--ion-color-light); margin: 16px 0;"></div>

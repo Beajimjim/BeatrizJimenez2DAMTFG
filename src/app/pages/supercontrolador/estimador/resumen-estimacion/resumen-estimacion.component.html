@@ -25,6 +25,10 @@
       <strong>Coste total estimado: </strong> {{ costeTotal | currency:'EUR' }}
     </ion-note>
     
+    <ion-button expand="block" color="success" (click)="guardar()">
+      <ion-icon slot="start" name="save-outline"></ion-icon>
+      Guardar estimación
+    </ion-button>
     <ion-note color="medium">
       * Basado en jornada, festivos, vacaciones y disponibilidad por perfil.
     </ion-note>

@@ -1,5 +1,37 @@
 <ion-content class="ion-padding">
+  <h1 class="ion-text-center">
+    Gráfica Gantt
+    <ion-icon
+      id="gantt-info"
+      name="information-circle-outline"
+      class="info-icon"
+      aria-label="Información sobre la Gráfica Gantt">
+    </ion-icon>
+  </h1>
 
+  <!-- Pop-over con la explicación -->
+  <ion-popover
+    trigger="gantt-info"
+    trigger-action="click"     
+    show-backdrop="false"
+    size="auto"
+    side="bottom">
+
+    <ng-template>
+      <ion-content class="ion-padding" style="min-width:260px">
+        <h3 class="ion-no-margin">Gráfica Gantt</h3>
+
+        <p>Visualiza las tareas del proyecto en una línea de tiempo interactiva.</p>
+
+        <p><strong>Cómo se usa:</strong></p>
+        <ul>
+          <li>Ajusta los filtros de <em>Perfil</em>, <em>Usuario</em>, <em>Estado</em> o fechas para acotar la vista.</li>
+          <li>Pasa el cursor / toca las barras para ver detalles de la tarea.</li>
+          <li>Pulsa <em>Limpiar filtros</em> para volver a la vista completa.</li>
+        </ul>
+      </ion-content>
+    </ng-template>
+  </ion-popover>
   <!-- ====== FILTROS ====== -->
   <ion-grid>
     <ion-row>
