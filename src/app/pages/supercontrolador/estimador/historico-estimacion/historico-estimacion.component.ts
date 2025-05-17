@@ -8,6 +8,8 @@ import { FormsModule }   from '@angular/forms';
 import { IonicModule }   from '@ionic/angular';
 import html2pdf          from 'html2pdf.js';
 import { EstimacionesService } from 'src/app/services/estimaciones.service';
+import { jsPDF } from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
 /* ------------------------------------------------------------------ */
 /*  Tipos                                                             */
@@ -63,46 +65,44 @@ export class HistoricoEstimacionComponent implements OnInit {
    * ================================================================*/
    descargarPDF(e: EstimacionUI): void {
 
-    // 1 ▸ Localizamos el div con la estimación
-    const element = document.getElementById(`estimacion-${e.id_estimacion}`);
-    if (!element) return;
-
-    // 2 ▸ Abrimos el accordion si está cerrado
-    const accordion = element.closest('ion-accordion') as any;
-    const group     = accordion?.closest('ion-accordion-group') as any;
-
-    // valor antes de abrir, para restaurarlo luego
-    const prevValue = group?.value;
-
-    // Ion 7 usa el atributo/property 'value' para marcar el abierto
-    if (accordion && group && prevValue !== accordion.value) {
-      group.value = accordion.value;          // abre el actual
-    }
-
-    // 3 ▸ Esperamos a que el DOM pinte el contenido
-    setTimeout(() => {
-
-      const options: any = {
-        margin      : 10,
-        filename    : `estimacion_${e.id_estimacion}.pdf`,
-        html2canvas : { scale: 2, useCORS: true, allowTaint: true },
-        jsPDF       : { unit: 'mm', format: 'a4', orientation: 'portrait' },
-        pagebreak   : { mode: ['avoid-all', 'css', 'legacy'] },
-      };
-
-      // 4 ▸ IMPORTANTE: primero .from(), luego .set(), luego .save()
-      html2pdf()
-        .from(element)
-        .set(options)
-        .save()
-        .then(() => {
-          // 5 ▸ Cerramos el accordion si antes estaba cerrado
-          if (group && prevValue !== accordion.value) {
-            group.value = prevValue;
-          }
-        });
-
-    }, 200);   // 100 ms es suficiente para que el accordion se pinte
+    /* 1 ▸ Preparamos el documento */
+    const doc = new jsPDF({
+      orientation: 'portrait',
+      unit: 'mm',
+      format: 'a4',
+    });
+  
+    /* 2 ▸ Encabezado */
+    doc.setFontSize(16);
+    doc.text('Estimación del proyecto', 105, 15, { align: 'center' });
+  
+    doc.setFontSize(11);
+    doc.text(`Fecha: ${new Date(e.fecha_generada).toLocaleString()}`, 15, 25);
+    doc.text(`Total de horas: ${e.total_horas}`, 15, 32);
+    doc.text(`Coste total: ${e.coste_total.toLocaleString('es-ES',{style:'currency',currency:'EUR'})}`, 15, 39);
+  
+    /* 3 ▸ Tabla de perfiles */
+    const head = [['Perfil', 'Horas', 'Pico', 'Vacaciones %', 'Plantilla', 'Recomendación', 'Coste €']];
+    const body = e.resumen.map(r => [
+      r.nombre,
+      r.horas,
+      r.picoConcurrencia,
+      r.coberturaVacaciones,
+      r.plantillaFinal,
+      r.recomendacion,
+      r.coste,
+    ]);
+  
+    autoTable(doc, {
+      head,
+      body,
+      startY: 46,
+      styles: { fontSize: 9 },
+      headStyles: { fillColor: [0, 123, 255] },  // azul Ionic
+    });
+  
+    /* 4 ▸ Guardamos */
+    doc.save(`estimacion_${e.id_estimacion}.pdf`);
   }
 
 }

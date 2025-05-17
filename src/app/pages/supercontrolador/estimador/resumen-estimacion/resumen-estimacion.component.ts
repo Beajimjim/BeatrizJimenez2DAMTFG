@@ -12,70 +12,83 @@ import { EstimacionesService, EstimacionPayload } from 'src/app/services/estimac
 })
 export class ResumenEstimacionComponent implements OnInit {
   @Input() tareas: any[] = [];
-  @Input() proyectoId!: number; 
+  @Input() proyectoId!: number;
+
+  /* ★ lista solo con tareas pendientes */
+  private pendientes: any[] = [];
 
   totalHoras = 0;
   calendario: any;
   perfiles: any[] = [];
 
   resultadoPorPerfil: {
-coste: any;
     nombre: string;
     horas: number;
     picoConcurrencia: number;
     coberturaVacaciones: number;
     plantillaFinal: number;
     recomendacion: string;
+    coste: number;
   }[] = [];
 
   costeTotal = 0;
 
   constructor(
     private estimadorService: EstimadorService,
-    private estimacionesSrv: EstimacionesService, 
-    private toast: ToastController 
+    private estimacionesSrv: EstimacionesService,
+    private toast: ToastController
   ) {}
 
   ngOnInit() {
     if (!this.tareas?.length) return;
 
-    this.totalHoras = this.tareas.reduce((acc, t) => acc + t.horas, 0);
+    /* ────────────────────────────────────────────────────────────
+       1 ▸ Filtramos solo tareas PENDIENTES
+       ──────────────────────────────────────────────────────────── */
+    this.pendientes = this.tareas.filter(t => t.estado === 'pendiente');  // ★
+
+    /* Si no hay pendientes, no hacemos nada */
+    if (!this.pendientes.length) return;
+
+    /* ──────────────────────────────────────────────────────────── */
+    this.totalHoras = this.pendientes.reduce((acc, t) => acc + t.horas, 0);  // ★
     this.calendario = this.estimadorService.getCalendario();
-    this.perfiles = this.estimadorService.getPerfiles();
+    this.perfiles   = this.estimadorService.getPerfiles();
 
     this.calcularPlantillaConSolapamientos();
   }
 
+  /* ================================================================
+   *  Cálculo usando solo tareas pendientes
+   * ================================================================*/
   calcularPlantillaConSolapamientos() {
     if (!this.calendario || !this.perfiles?.length) return;
 
     const perfilesUnicos = new Map<string, any>();
     for (const perfil of this.perfiles) {
-      if (!perfilesUnicos.has(perfil.nombre)) {
-        perfilesUnicos.set(perfil.nombre, perfil);
-      }
+      if (!perfilesUnicos.has(perfil.nombre)) perfilesUnicos.set(perfil.nombre, perfil);
     }
 
-    const diasProyecto = this.getDiasDelProyecto();
-    const diasTotales = diasProyecto.length;
+    const diasProyecto   = this.getDiasDelProyecto();
+    const diasTotales    = diasProyecto.length;
+    const festivos       = this.calendario.festivos ?? 0;
+    const vacaciones     = this.calendario.vacaciones ?? 0;
+    const diasLabSemana  = this.calendario.diasLaborablesPorSemana ?? 5;
+    const diasLaborables = diasTotales * (diasLabSemana / 7) - festivos;
 
-    const festivos = this.calendario.festivos ?? 0;
-    const vacaciones = this.calendario.vacaciones ?? 0;
-    const diasLaborablesPorSemana = this.calendario.diasLaborablesPorSemana ?? 5;
-    const diasLaborablesTotales = diasTotales * (diasLaborablesPorSemana / 7) - festivos;
-
+    /* ── mapa día → { perfil: nº tareas } ──────────────────────── */
     const tareasPorDia: Record<string, Record<string, number>> = {};
-
     for (const dia of diasProyecto) {
       tareasPorDia[dia] = {};
       const fechaActual = new Date(dia);
 
-      for (const tarea of this.tareas) {
+      for (const tarea of this.pendientes) {                                  // ★
         const perfil = this.perfiles.find(p => p.id === tarea.id_perfil);
         if (!perfil) continue;
+
         const nombre = perfil.nombre;
         const inicio = new Date(tarea.fecha_inicio);
-        const fin = new Date(tarea.fecha_fin);
+        const fin    = new Date(tarea.fecha_fin);
 
         if (fechaActual >= inicio && fechaActual <= fin) {
           tareasPorDia[dia][nombre] = (tareasPorDia[dia][nombre] || 0) + 1;
@@ -83,10 +96,9 @@ coste: any;
       }
     }
 
+    /* ── pico de concurrencia por perfil ───────────────────────── */
     const picoConcurrenciaPorPerfil: Record<string, number> = {};
-
-    for (const dia in tareasPorDia) {
-      const ocupacion = tareasPorDia[dia];
+    for (const ocupacion of Object.values(tareasPorDia)) {
       for (const nombre in ocupacion) {
         picoConcurrenciaPorPerfil[nombre] = Math.max(
           picoConcurrenciaPorPerfil[nombre] || 0,
@@ -95,28 +107,29 @@ coste: any;
       }
     }
 
+    /* ── construimos el resultado ─────────────────────────────── */
     this.resultadoPorPerfil = [];
     this.costeTotal = 0;
 
     for (const [nombre, pico] of Object.entries(picoConcurrenciaPorPerfil)) {
-      const perfil = perfilesUnicos.get(nombre);
-      const tarifa = perfil.tarifa ?? 0;
-      const disponibilidad = (perfil.disponibilidad ?? 100) / 100;
+      const perfil   = perfilesUnicos.get(nombre);
+      const tarifa   = perfil.tarifa ?? 0;
+      const disp     = (perfil.disponibilidad ?? 100) / 100;
 
-      const coberturaVacaciones = vacaciones / diasLaborablesTotales;
-      const plantillaAjustada = pico / disponibilidad * (1 + coberturaVacaciones);
-      const plantillaRedondeada = Math.ceil(plantillaAjustada * 10) / 10;
+      const cobVac   = vacaciones / diasLaborables;
+      const plantilla= pico / disp * (1 + cobVac);
+      const plantRnd = Math.ceil(plantilla * 10) / 10;
 
-      const enteras = Math.floor(plantillaRedondeada);
-      const decimales = plantillaRedondeada - enteras;
-      const porcentaje = Math.round(decimales * 100);
+      const enteras  = Math.floor(plantRnd);
+      const dec      = plantRnd - enteras;
+      const pct      = Math.round(dec * 100);
 
-      let recomendacion = `${enteras} completo${enteras === 1 ? '' : 's'}`;
-      if (porcentaje > 0) {
-        recomendacion += ` + 1 al ${porcentaje}%`;
-      }
+      const recomendacion =
+        pct > 0
+          ? `${enteras} completo${enteras === 1 ? '' : 's'} + 1 al ${pct}%`
+          : `${enteras} completo${enteras === 1 ? '' : 's'}`;
 
-      const horasTotales = this.tareas
+      const horasTotales = this.pendientes                                  // ★
         .filter(t => this.perfiles.find(p => p.id === t.id_perfil)?.nombre === nombre)
         .reduce((acc, t) => acc + t.horas, 0);
 
@@ -126,8 +139,8 @@ coste: any;
         nombre,
         horas: Math.round(horasTotales),
         picoConcurrencia: pico,
-        coberturaVacaciones: Math.round(coberturaVacaciones * 100),
-        plantillaFinal: plantillaRedondeada,
+        coberturaVacaciones: Math.round(cobVac * 100),
+        plantillaFinal: plantRnd,
         recomendacion,
         coste
       });
@@ -136,13 +149,16 @@ coste: any;
     }
   }
 
+  /* ============================================================= */
+  /*  Utilidades                                                   */
+  /* ============================================================= */
   getDiasDelProyecto(): string[] {
-    const fechas = this.tareas.map(t => ({
+    const fechas = this.pendientes.map(t => ({                              // ★
       inicio: new Date(t.fecha_inicio),
-      fin: new Date(t.fecha_fin),
+      fin   : new Date(t.fecha_fin),
     }));
     const inicio = new Date(Math.min(...fechas.map(f => f.inicio.getTime())));
-    const fin = new Date(Math.max(...fechas.map(f => f.fin.getTime())));
+    const fin    = new Date(Math.max(...fechas.map(f => f.fin.getTime())));
 
     const dias: string[] = [];
     for (let d = new Date(inicio); d <= fin; d.setDate(d.getDate() + 1)) {
@@ -152,39 +168,39 @@ coste: any;
   }
 
   getDisponibilidad(nombrePerfil: string): number {
-    const perfil = this.perfiles.find(p => p.nombre === nombrePerfil);
-    return perfil?.disponibilidad ?? 100;
+    return this.perfiles.find(p => p.nombre === nombrePerfil)?.disponibilidad ?? 100;
   }
-  
+
+  /* plantilla base (sin cambios, aunque usa horas de pendientes) */
   getPlantillaBase(r: any): string {
-    const disponibilidad = this.getDisponibilidad(r.nombre) / 100;
-    const horasDiarias = this.calendario.horasPorDia;
-    const diasSemana = this.calendario.diasLaborablesPorSemana;
-    const diasEfectivos = diasSemana / 7;
-    const personas = r.horas / (horasDiarias * diasEfectivos * disponibilidad);
+    const disp      = this.getDisponibilidad(r.nombre) / 100;
+    const hDia      = this.calendario.horasPorDia;
+    const diasSem   = this.calendario.diasLaborablesPorSemana;
+    const diasEfect = diasSem / 7;
+    const personas  = r.horas / (hDia * diasEfect * disp);
     return personas.toFixed(2);
   }
 
+  /* ============================================================= */
+  /*  Guardar                                                     */
+  /* ============================================================= */
   async guardar() {
     if (!this.proyectoId || !this.calendario) return;
-  
-    // ② — crea el payload con los OBJETOS, no con cadenas
+
     const payload: EstimacionPayload = {
       id_proyecto     : this.proyectoId,
       total_horas     : this.totalHoras,
       coste_total     : this.costeTotal,
-      resumen_json    : this.resultadoPorPerfil, // <-- sin JSON.stringify
-      calendario_json : this.calendario          // idem
+      resumen_json    : this.resultadoPorPerfil,
+      calendario_json : this.calendario
     };
-  
+
     this.estimacionesSrv.crearEstimacion(payload).subscribe({
-      next : async () => {
-        (await this.toast.create({
-          message : 'Estimación guardada ✔️',
-          duration: 2000,
-          color   : 'success'
-        })).present();
-      },
+      next : async () => (await this.toast.create({
+                message : 'Estimación guardada ✔️',
+                duration: 2000,
+                color   : 'success'
+              })).present(),
       error: async err => {
         console.error(err);
         (await this.toast.create({
@@ -195,5 +211,4 @@ coste: any;
       }
     });
   }
-  
 }
