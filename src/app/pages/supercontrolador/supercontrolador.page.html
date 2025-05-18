@@ -122,6 +122,7 @@
       <app-estimador *ngIf="seccionActiva === 'estimador'" [proyectoId]="proyectoId"></app-estimador>
       <app-asignacion-personal  *ngIf="seccionActiva==='asignacion'"  [proyectoId]="proyectoId"></app-asignacion-personal>   
       <app-grafica-gantt *ngIf="seccionActiva === 'gantt'" [proyectoId]="proyectoId"></app-grafica-gantt>
+      <app-incurrido-tareas *ngIf="seccionActiva === 'incurrido'" [proyectoId]="proyectoId" ></app-incurrido-tareas>
       
     </ion-content>
    

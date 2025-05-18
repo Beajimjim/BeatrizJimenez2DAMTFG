@@ -25,6 +25,7 @@ nombre_perfil: any;
   horas: number;
   estado: 'pendiente' | 'en curso' | 'finalizada';
   nombre_usuario?: string; // puede venir null si no tiene usuario
+  horas_incurridas?: number;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -90,4 +91,9 @@ export class ProyectoService {
   getListaPerfiles(): Observable<any[]> {
   return this.http.get<any[]>(`${this.api}/perfiles.php`);
 }
+
+/** Actualiza horas incurridas y estado de una tarea */
+  actualizarHorasIncurridas(id: number, payload: { horas_incurridas: number, estado: string }) {
+    return this.http.put(`${this.api}/tareas.php?incurrido=${id}`, payload);
+  }
 }
