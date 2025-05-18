@@ -35,12 +35,14 @@ export class EstimadorComponent {
 
   ngOnInit(): void {
     const id = this.proyectoId;
+  
     this.proyectoService.getTareasPorProyecto(id).subscribe(tareas => {
-      this.tareasDelProyecto = tareas;
+      this.tareasDelProyecto = tareas.filter(tarea => tarea.estado === 'pendiente');
     });
+  
     this.proyectoService.getListaPerfiles().subscribe(perfiles => {
       this.perfiles = perfiles;
-      this.estimadorService.setPerfiles(this.perfiles); // ✅ Guardarlos en el estimador
+      this.estimadorService.setPerfiles(this.perfiles);
     });
   }
 }

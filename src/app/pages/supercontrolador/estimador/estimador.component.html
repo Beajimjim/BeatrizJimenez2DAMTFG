@@ -62,7 +62,7 @@
   <!-- Contenido dinámico -->
   <div [ngSwitch]="segmentoActual">
     <app-calendar-settings *ngSwitchCase="'jornada'"></app-calendar-settings>    
-    <app-resumen-estimacion *ngSwitchCase="'resumen'"  [proyectoId]="proyectoId" [tareas]="tareasDelProyecto" ></app-resumen-estimacion>
+    <app-resumen-estimacion *ngSwitchCase="'resumen'"  [proyectoId]="proyectoId"></app-resumen-estimacion>
     <app-historico-estimacion *ngSwitchCase="'historico'" [proyectoId]="proyectoId"></app-historico-estimacion>
   </div>
  

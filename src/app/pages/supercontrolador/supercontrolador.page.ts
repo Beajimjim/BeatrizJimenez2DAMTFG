@@ -6,6 +6,7 @@ import { ProyectoService } from '../../services/proyectos.service';
 import { TareasComponent } from './tareas/tareas.component';
 import { EstimadorComponent } from './estimador/estimador.component';
 import { GraficaGanttComponent } from './grafica-gantt/grafica-gantt.component';
+import { AsignacionPersonalComponent } from './asignacion-personal/asignacion-personal.component';
 
 @Component({
   standalone: true,
@@ -13,7 +14,7 @@ import { GraficaGanttComponent } from './grafica-gantt/grafica-gantt.component';
   templateUrl: './supercontrolador.page.html',
   styleUrls: ['./supercontrolador.page.scss'],
   // ⬇️ Módulos que necesita la plantilla
-  imports: [CommonModule, IonicModule, RouterModule,TareasComponent,EstimadorComponent, GraficaGanttComponent],
+  imports: [CommonModule, IonicModule, RouterModule,TareasComponent,EstimadorComponent, GraficaGanttComponent, AsignacionPersonalComponent],
 })
 export class SupercontroladorPage implements OnInit {
 
@@ -23,9 +24,10 @@ export class SupercontroladorPage implements OnInit {
 
   menu = [
     { icon: 'home-outline', label: 'Inicio', path: 'inicio' },
-    { icon: 'settings-outline', label: 'Tareas', path: 'tareas' },    
+    { icon: 'settings-outline', label: 'Tareas', path: 'tareas' },       
     { icon: 'calculator-outline', label: 'Estimador', path: 'estimador' },
-    { icon: 'bar-chart-outline', label: 'Gantt', path: 'gantt' } 
+    { icon: 'people-outline', label: 'Asignacion', path: 'asignacion' },
+    { icon: 'bar-chart-outline', label: 'Gantt', path: 'gantt' },    
   ];
   seccionActiva = 'inicio';
 

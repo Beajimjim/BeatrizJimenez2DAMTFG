@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
+import { FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
 import { EstimadorService } from 'src/app/services/estimador.service';
 
 @Component({
@@ -9,23 +9,34 @@ import { EstimadorService } from 'src/app/services/estimador.service';
   standalone: true,
   imports: [CommonModule, IonicModule, ReactiveFormsModule],
   templateUrl: './calendar-settings.component.html',
-  styleUrls: ['./calendar-settings.component.scss'],
 })
-export class CalendarSettingsComponent {
-  form: FormGroup;
+export class CalendarSettingsComponent implements OnInit {
+  form = this.fb.group({
+    horasPorDia: [8, [Validators.required, Validators.min(1), Validators.max(24)]],
+    diasLaborablesPorSemana: [5, [Validators.required, Validators.min(1), Validators.max(7)]],
+    socialRate: [30, [Validators.required, Validators.min(0), Validators.max(100)]],
+  });
 
-  constructor(private fb: FormBuilder, private estimadorService: EstimadorService) {
-    this.form = this.fb.group({
-      horasPorDia: [8, [Validators.required, Validators.min(1), Validators.max(24)]],
-      diasLaborablesPorSemana: [5, [Validators.required, Validators.min(1), Validators.max(7)]],
-      festivos: [0, [Validators.required, Validators.min(0)]],
-      vacaciones: [0, [Validators.required, Validators.min(0)]],
-    });
+  constructor(
+    private fb: FormBuilder,
+    private estimadorService: EstimadorService
+  ) {}
+
+  ngOnInit() {
+    const cfg = this.estimadorService.getCalendario();
+    if (cfg) {
+      this.form.patchValue({
+        horasPorDia: cfg.horasPorDia,
+        diasLaborablesPorSemana: cfg.diasLaborablesPorSemana,
+        socialRate: cfg.socialRate ?? 30
+      });
+    }
   }
 
   guardarConfiguracion() {
-    if (this.form.valid) {
-      this.estimadorService.setCalendario(this.form.value);
-    }
+    if (this.form.invalid) return;
+    this.estimadorService.setCalendario({
+      ...this.form.value
+    });
   }
 }

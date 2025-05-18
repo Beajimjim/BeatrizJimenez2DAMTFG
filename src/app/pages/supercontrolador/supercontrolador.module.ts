@@ -5,10 +5,12 @@ import { TareasComponent } from './tareas/tareas.component';
 import { EstimadorComponent } from "./estimador/estimador.component";
 import { GraficaGanttComponent } from './grafica-gantt/grafica-gantt.component';
 
+import { AsignacionPersonalComponent } from "./asignacion-personal/asignacion-personal.component";
+
 @Component({
   selector: 'app-supercontrolador',
   standalone: true,
-  imports: [CommonModule, IonicModule, TareasComponent, EstimadorComponent, GraficaGanttComponent ],
+  imports: [CommonModule, IonicModule, TareasComponent, EstimadorComponent, GraficaGanttComponent, AsignacionPersonalComponent],
   templateUrl: './supercontrolador.page.html',
   styleUrls: ['./supercontrolador.page.scss'],
 })

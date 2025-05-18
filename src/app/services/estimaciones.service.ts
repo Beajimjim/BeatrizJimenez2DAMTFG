@@ -10,6 +10,7 @@ export interface ResumenPorPerfil {
   plantillaFinal: number;
   recomendacion: string;
   coste: number;
+  hayCapacidad: boolean;     
 }
 
 export interface EstimacionPayload {
