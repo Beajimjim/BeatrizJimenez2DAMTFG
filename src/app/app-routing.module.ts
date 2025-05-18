@@ -2,13 +2,9 @@ import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
-  {
-    path: 'home',
-    loadChildren: () => import('./home/home.module').then( m => m.HomePageModule)
-  },
-  {
+   {
     path: '',
-    redirectTo: 'home',
+    redirectTo: 'login',
     pathMatch: 'full'
   },
   {
@@ -23,8 +19,17 @@ const routes: Routes = [
     path: 'supercontrolador',
     loadComponent: () =>
       import('./pages/supercontrolador/supercontrolador.page')
-        .then(m => m.SupercontroladorPage)   // <‑‑ página stand‑alone
-  }
+        .then(m => m.SupercontroladorPage)  
+  },
+  {
+    path: 'proyecto/:id',                       
+    loadComponent: () =>
+      import('./pages/supercontrolador/supercontrolador.page')
+        .then(m => m.SupercontroladorPage)   
+  },
+
+
+
 ];
 
 @NgModule({

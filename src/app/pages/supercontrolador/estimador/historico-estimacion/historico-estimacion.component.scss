@@ -1,0 +1,24 @@
+/* ============================================================== */
+/*  Estilos del componente – sin CSS inline                        */
+/* ============================================================== */
+
+/* 1 ▸ Segmento pegado arriba (puedes quitar `position: sticky`
+       si prefieres que también desaparezca al hacer scroll)       */
+       .segment-wrapper {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+      }
+      
+      /* 2 ▸ Accordion sin scroll interno (solo tendremos el del
+             ion-content padre)                                          */
+      ion-accordion {
+        --ion-accordion-content-max-height: none;
+      }
+      
+      ion-accordion[expanded]::part(content) {
+        max-height: none !important;
+        height: auto !important;
+        overflow: visible !important;
+      }
+      

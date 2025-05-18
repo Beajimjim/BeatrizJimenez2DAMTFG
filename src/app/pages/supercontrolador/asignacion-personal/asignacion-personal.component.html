@@ -1,0 +1,86 @@
+<ion-content class="ion-padding">
+
+  <!-- TÍTULO -->
+  <div class="ion-text-center">
+    <h1>
+      Asignación de Personal
+      <ion-icon
+        id="asignacion-info"
+        name="information-circle-outline"
+        class="info-icon"
+        aria-label="Información sobre la asignación">
+      </ion-icon>
+    </h1>
+  </div>
+
+  <!-- Pop-over explicativo -->
+  <ion-popover
+    trigger="asignacion-info"
+    trigger-action="click"
+    size="auto"
+    side="bottom">
+    <ng-template>
+      <ion-content class="ion-padding" style="min-width:260px">
+        <h3 class="ion-no-margin">Asignación de personal</h3>
+
+        <p>Permite asignar tareas pendientes al personal disponible del proyecto.</p>
+
+        <p><strong>Cómo se usa:</strong></p>
+        <ul>
+          <li>Selecciona una tarea pendiente del listado.</li>
+          <li>Consulta el personal disponible compatible.</li>
+          <li>Pulsa <em>Asignar</em> para vincularlo a la tarea.</li>
+        </ul>
+      </ion-content>
+    </ng-template>
+  </ion-popover>
+
+  <ion-grid>
+    <ion-row>
+
+      <!-- A: Lista de tareas pendientes -->
+      <ion-col size="6">
+        <h3>Tareas pendientes</h3>
+        <ion-list>
+          <ion-item
+            *ngFor="let t of tareas"
+            [color]="t === selectedTask ? 'light' : undefined"
+            (click)="onSelectTask(t)">
+            <ion-label>
+              <h4>{{ t.nombre }}</h4>
+              <p>{{ t.horas }} h · Perfil: {{ t.nombre_perfil }}</p>
+              <p>Asignado a: {{ t.nombre_usuario || 'Sin asignar' }}</p>
+            </ion-label>
+          </ion-item>
+        </ion-list>
+      </ion-col>
+
+      <!-- B: Lista de personal filtrado -->
+      <ion-col size="6">
+        <ng-container *ngIf="selectedTask; else selMsg">
+          <h3>Personal disponible</h3>
+          <ion-list>
+            <ion-item *ngFor="let p of disponibles">
+              <ion-label>
+                <h4>{{ p.nombre }}</h4>
+                <p>Semana: {{ p.horas_max_semana }} h · Día: {{ p.horas_max_dia }} h</p>
+                <p>Vacaciones:
+                  <span *ngFor="let v of p.vacaciones">
+                    {{ v.inicio }}→{{ v.fin }}&nbsp;
+                  </span>
+                </p>
+              </ion-label>
+              <ion-button slot="end" size="small" (click)="assign(p)">
+                Asignar
+              </ion-button>
+            </ion-item>
+          </ion-list>
+        </ng-container>
+        <ng-template #selMsg>
+          <p class="ion-padding">Selecciona una tarea primero.</p>
+        </ng-template>
+      </ion-col>
+
+    </ion-row>
+  </ion-grid>
+</ion-content>

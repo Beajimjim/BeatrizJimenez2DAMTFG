@@ -1,34 +1,131 @@
-<ion-split-pane when="md">          <!-- Menú fijo en ≥ md, deslizable en < md -->
-  
+<!-- Supercontrolador – plantilla con botón "Escritorio" anclado al pie del menú -->
+<ion-split-pane when="md" contentId="sc-content"><!-- Menú fijo en ≥ md, deslizable en < md -->
+
   <!-- ===== MENÚ LATERAL ===== -->
-  <ion-menu content-id="sc-content" side="start">
+  <ion-menu side="start" contentId="sc-content" type="overlay">
     <ion-header>
       <ion-toolbar color="primary">
         <ion-title>Smart3Z</ion-title>
+        <ion-buttons slot="end">
+          <ion-label>{{ usuario }}</ion-label>
+        </ion-buttons>
       </ion-toolbar>
-      <ion-item lines="none">
-        <ion-label>{{ usuario }}</ion-label>
-      </ion-item>
     </ion-header>
 
     <ion-content>
       <ion-list>
-        <ion-menu-toggle auto-hide="false" *ngFor="let item of menu">
-          <ion-item routerLinkActive="item-selected" [routerLink]="item.path" lines="none">
-            <ion-icon slot="start" [name]="item.icon"></ion-icon>
-            <ion-label>{{ item.label }}</ion-label>
-          </ion-item>
-        </ion-menu-toggle>
+        <ion-item
+          *ngFor="let item of menu"
+          (click)="seleccionarSeccion(item.path)"
+          button
+          detail="false">
+          <ion-icon slot="start" [name]="item.icon"></ion-icon>
+          <ion-label>{{ item.label }}</ion-label>
+        </ion-item>
       </ion-list>
     </ion-content>
+
+    <!-- ===== BOTÓN ESCRITORIO (pie fijo) ===== -->
+    <ion-footer class="ion-no-border">
+      <ion-item routerDirection="root"
+                routerLink="/escritorio"
+                lines="none">
+        <ion-icon slot="start" name="arrow-back"></ion-icon>
+        <ion-label>Escritorio</ion-label>
+      </ion-item>
+    </ion-footer>
   </ion-menu>
 
   <!-- ===== CONTENIDO PRINCIPAL ===== -->
-  <ion-content id="sc-content" fullscreen class="sc-main">
-    <section class="sc-card">
-      <h1>Super Controlador</h1>
-      <p>Aquí podrás gestionar módulos, estadísticas y todo lo que necesites.</p>
-    </section>
-  </ion-content>
+  <ion-router-outlet id="sc-content" main>
+
+    <ion-content *ngIf="proyecto" class="ion-padding">
+      <div *ngIf="seccionActiva === 'inicio'">
+        <!-- Título del proyecto -->
+        <h1 class="ion-text-center">
+          {{ proyecto.nombre }}
+          <ion-icon
+            id="project-info"
+            name="information-circle-outline"
+            class="info-icon"
+            aria-label="Información sobre el proyecto">
+          </ion-icon>
+        </h1>
+        
+        <p class="ion-text-center" style="color: var(--ion-color-medium); font-style: italic;">
+          Estado: {{ proyecto.estado }}
+        </p>
+        
+        <!-- Pop-over con la explicación -->
+        <ion-popover
+          trigger="project-info"
+          trigger-action="click"     
+          show-backdrop="false"
+          size="auto"
+          side="bottom">
+        
+          <ng-template>
+            <ion-content class="ion-padding" style="min-width:260px">
+              <h3 class="ion-no-margin">Proyecto: {{ proyecto.nombre }}</h3>
+        
+              <p>Esta sección muestra la información general del proyecto.</p>
+        
+              <p><strong>Qué encontrarás aquí:</strong></p>
+              <ul>
+                <li>Descripción y objetivos principales.</li>
+                <li>Fechas de inicio y fin previstas.</li>
+                <li>Departamento responsable y jefe de proyecto.</li>
+                <li>Estado actual: <em>Planificado, En curso, Finalizado…</em></li>
+              </ul>
+        
+              <p class="ion-margin-top">
+                Usa el menú lateral para acceder a <em>Tareas</em>, <em>Estimador</em> o <em>Gráfica Gantt</em>.
+              </p>
+            </ion-content>
+          </ng-template>
+        </ion-popover>
+    
+      <!-- Separador visual -->
+      <div style="height: 1px; background-color: var(--ion-color-light); margin: 16px 0;"></div>
+    
+      <!-- Detalles del proyecto -->
+      <ion-grid class="ion-margin-top">
+        <ion-row>
+          <ion-col size="12">
+            <h2 class="ion-text-uppercase ion-margin-bottom" style="color: var(--ion-color-primary); font-size: 1.1em;">
+              Resumen del Proyecto
+            </h2>
+            <p class="ion-text-wrap">{{ proyecto.descripcion }}</p>
+          </ion-col>
+        </ion-row>
+    
+        <ion-row class="ion-margin-top">
+          <ion-col size="6">
+            <p><strong>Fecha de inicio:</strong><br>{{ proyecto.fecha_inicio }}</p>
+          </ion-col>
+          <ion-col size="6">
+            <p><strong>Fecha de fin:</strong><br>{{ proyecto.fecha_fin }}</p>
+          </ion-col>
+        </ion-row>
+    
+        <ion-row class="ion-margin-top">
+          <ion-col size="6">
+            <p><strong>Departamento:</strong><br>{{ proyecto.departamento }}</p>
+          </ion-col>
+          <ion-col size="6">
+            <p><strong>Jefe de proyecto:</strong><br>{{ proyecto.jefe }}</p>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+      </div>     
+      <app-tareas *ngIf="seccionActiva === 'tareas'" [proyectoId]="proyectoId"></app-tareas>
+      <app-estimador *ngIf="seccionActiva === 'estimador'" [proyectoId]="proyectoId"></app-estimador>
+      <app-asignacion-personal  *ngIf="seccionActiva==='asignacion'"  [proyectoId]="proyectoId"></app-asignacion-personal>   
+      <app-grafica-gantt *ngIf="seccionActiva === 'gantt'" [proyectoId]="proyectoId"></app-grafica-gantt>
+      
+    </ion-content>
+   
+   
+  </ion-router-outlet>
 
 </ion-split-pane>

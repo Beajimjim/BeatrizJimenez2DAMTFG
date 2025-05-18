@@ -1,0 +1,68 @@
+<ion-card>
+  <ion-card-header>
+    <ion-card-title>Resumen de la Estimación</ion-card-title>
+  </ion-card-header>
+  <ion-card-content *ngIf="resultadoPorPerfil.length">
+
+    <p><strong>Total de horas del proyecto:</strong> {{ totalHoras }}</p>
+
+    <ion-list>
+      <ng-container *ngFor="let r of resultadoPorPerfil">
+        <ion-item>
+          <ion-label>
+            <h2>{{ r.nombre }}</h2>
+            <p>Horas necesarias: {{ r.horas }}</p>
+            <p>Plantilla mínima requerida: {{ r.plantillaFinal }}</p>
+
+            <p>
+              💰 <strong>Coste estimado total:</strong>
+              {{ r.coste | currency:'EUR':'symbol':'1.2-2' }}
+            </p>
+
+            <p class="ion-text-wrap" style="margin-left: 1em;">
+              ▪️ Coste base (horas × tarifa):
+              {{
+                (r.coste / (1 + calendario.socialRate / 100))
+                  | currency:'EUR':'symbol':'1.2-2'
+              }}<br />
+              ▪️ Coste social (%):
+              {{
+                (r.coste * calendario.socialRate / (100 + calendario.socialRate))
+                  | currency:'EUR':'symbol':'1.2-2'
+              }}
+            </p>
+
+            <ion-chip [color]="r.hayCapacidad ? 'success' : 'danger'">
+              <ion-icon
+                slot="start"
+                [name]="
+                  r.hayCapacidad
+                    ? 'checkmark-circle-outline'
+                    : 'close-circle-outline'
+                "
+              ></ion-icon>
+              <ion-label>
+                {{
+                  r.hayCapacidad
+                    ? 'Capacidad suficiente'
+                    : 'Capacidad insuficiente'
+                }}
+              </ion-label>
+            </ion-chip>
+          </ion-label>
+        </ion-item>
+      </ng-container>
+    </ion-list>
+
+    <ion-note color="primary">
+      <strong>Coste total estimado: </strong>
+      {{ costeTotal | currency:'EUR':'symbol':'1.2-2' }}
+    </ion-note>
+
+    <ion-button expand="block" color="success" (click)="guardar()">
+      <ion-icon slot="start" name="save-outline"></ion-icon>
+      Guardar estimación
+    </ion-button>
+
+  </ion-card-content>
+</ion-card>

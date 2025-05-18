@@ -1,0 +1,69 @@
+<ion-content class="ion-padding">
+
+  <!-- Título centrado -->
+  <h1 class="ion-text-center">
+    Estimador de Recursos
+    <ion-icon
+      id="estimator-info"
+      name="information-circle-outline"
+      class="info-icon"
+      aria-label="Información del Estimador">
+    </ion-icon>
+  </h1>
+
+  <!-- Pop-over con la explicación -->
+  <ion-popover
+    trigger="estimator-info"
+    trigger-action="click"     
+    show-backdrop="false"
+    size="auto"
+    side="bottom">
+
+    <ng-template>
+      <ion-content class="ion-padding" style="min-width:260px">
+        <h3 class="ion-no-margin">Estimador de Recursos</h3>
+        <p>Esta herramienta te permite:</p>
+        <ul>
+          <li>Configurar la <strong>jornada laboral</strong> y los festivos.</li>
+          <li>Asignar <strong>perfiles</strong> y horas a cada tarea.</li>
+          <li>Calcular la <strong>duración</strong> y el <strong>coste total</strong>.</li>
+        </ul>
+        <p class="ion-margin-top">
+          <strong>Cómo se usa:</strong><br>
+          1. Define calendario y horario en la pestaña <em>Jornada</em>.<br>
+          2. Consulta horas y costes agregados en <em>Resumen</em>.
+        </p>
+      </ion-content>
+    </ng-template>
+  </ion-popover>
+
+  <!-- Separador -->
+  <div style="height: 1px; background-color: var(--ion-color-light); margin: 16px 0;"></div>
+
+  <!-- Tabs tipo segment -->
+  <ion-segment [(ngModel)]="segmentoActual">
+    <ion-segment-button value="jornada">
+      <ion-label>Jornada</ion-label>
+    </ion-segment-button>    
+
+    <ion-segment-button value="resumen">
+      <ion-label>Resumen</ion-label>
+    </ion-segment-button>
+
+    <ion-segment-button value="historico">
+      <ion-label>Histórico</ion-label>
+    </ion-segment-button>
+  </ion-segment>
+  
+
+  <!-- Separador -->
+  <div style="height: 1px; background-color: var(--ion-color-light); margin: 16px 0;"></div>
+
+  <!-- Contenido dinámico -->
+  <div [ngSwitch]="segmentoActual">
+    <app-calendar-settings *ngSwitchCase="'jornada'"></app-calendar-settings>    
+    <app-resumen-estimacion *ngSwitchCase="'resumen'"  [proyectoId]="proyectoId"></app-resumen-estimacion>
+    <app-historico-estimacion *ngSwitchCase="'historico'" [proyectoId]="proyectoId"></app-historico-estimacion>
+  </div>
+ 
+</ion-content>
