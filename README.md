@@ -176,22 +176,4 @@ mysql -u root -p < db/schema.sql
 * Incluye *foreign keys*, índices compuestos y `ON DELETE CASCADE`.
 * Script en `db/schema.sql`.
 
-![ER diagram](docs/er-diagram-smart3z.png)
 
-## 🧑‍💻 Contribuir
-
-1. Haz un fork y clona tu copia.
-2. Crea una rama: `git checkout -b feature/nueva-funcionalidad`.
-3. Commitea los cambios: `git commit -m "Añadir nueva funcionalidad"`.
-4. Haz push: `git push origin feature/nueva-funcionalidad`.
-5. Abre un **Pull Request**.
-
-Se aceptan issues y PRs bien documentados ✨.
-
-## 📜 License
-
-[MIT](LICENSE)
-
----
-
-*Hecho con ♥ para el Trabajo Fin de Grado.*
