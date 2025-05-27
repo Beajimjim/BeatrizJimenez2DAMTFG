@@ -1,3 +1,4 @@
+// src/app/pages/supercontrolador/grafica-gantt/grafica-gantt.component.ts
 import { Component, Input, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule }   from '@angular/common';
 import { FormsModule }    from '@angular/forms';
@@ -16,98 +17,82 @@ export class GraficaGanttComponent implements OnInit {
 
   @Input() proyectoId!: number;
 
-  tareasOriginal: any[] = [];          // copia inmutable
-  tareas:          any[] = [];         // copia filtrada
+  tareasOriginal: any[] = [];
+  tareas        : any[] = [];
 
   perfiles: string[] = [];
   usuarios: string[] = [];
   estados : string[] = [];
 
-  // valores de los filtros
-  perfilFiltro     = '';
-  usuarioFiltro    = '';
-  estadoFiltro     = '';
-  fechaInicioFiltro= '';
-  fechaFinFiltro   = '';
+  perfilFiltro      = '';
+  usuarioFiltro     = '';
+  estadoFiltro      = '';
+  fechaInicioFiltro = '';
+  fechaFinFiltro    = '';
 
-  ganttChart: GoogleChartInterface | null = null;   // null = gráfico oculto
+  ganttChart: GoogleChartInterface | null = null;
 
   constructor(
     private proyectoSrv: ProyectoService,
     private cdRef      : ChangeDetectorRef
   ) {}
 
-  /* ---------- CARGA INICIAL ---------- */
-
+  /* ------------------ carga inicial ------------------ */
   ngOnInit(): void {
     if (!this.proyectoId) { return; }
 
     this.proyectoSrv.getTareasPorProyecto(this.proyectoId).subscribe({
       next : tareas => {
-        // 1) normalizar nulos
         this.tareasOriginal = tareas.map((t:any) => ({
           ...t,
-          nombre_perfil : t.nombre_perfil  ?? 'Sin perfil',
-          nombre_usuario: t.nombre_usuario ?? 'Sin asignar',
-          estado        : t.estado         ?? 'pendiente'
+          nombre_perfil   : t.nombre_perfil  ?? 'Sin perfil',
+          nombre_usuario  : t.nombre_usuario ?? 'Sin asignar',
+          estado          : t.estado         ?? 'pendiente',
+          horas_incurridas: t.horas_incurridas ?? 0
         }));
 
-        // 2) poblar combos
         this.perfiles = Array.from(new Set(this.tareasOriginal.map(t => t.nombre_perfil )));
         this.usuarios = Array.from(new Set(this.tareasOriginal.map(t => t.nombre_usuario)));
         this.estados  = Array.from(new Set(this.tareasOriginal.map(t => t.estado        )));
 
-        // 3) dibujar vista completa
         this.aplicarFiltros();
       },
       error: err => console.error('❌ Error cargando tareas', err)
     });
   }
 
-  /* ---------- BOTÓN LIMPIAR ---------- */
-
+  /* ------------------ filtros ------------------ */
   limpiarFiltros(): void {
-    this.perfilFiltro   = '';
-    this.usuarioFiltro  = '';
-    this.estadoFiltro   = '';
-    this.fechaInicioFiltro = '';
-    this.fechaFinFiltro    = '';
+    this.perfilFiltro = this.usuarioFiltro = this.estadoFiltro = '';
+    this.fechaInicioFiltro = this.fechaFinFiltro = '';
     this.aplicarFiltros();
   }
 
-  /* ---------- FILTRO + REDIBUJADO ---------- */
-
   aplicarFiltros(): void {
-
     const desde = this.fechaInicioFiltro ? new Date(this.fechaInicioFiltro) : null;
     const hasta = this.fechaFinFiltro   ? new Date(this.fechaFinFiltro)   : null;
 
     this.tareas = this.tareasOriginal.filter(t => {
+      const matchPerfil  = !this.perfilFiltro  || t.nombre_perfil  === this.perfilFiltro;
+      const matchUsuario = !this.usuarioFiltro || t.nombre_usuario === this.usuarioFiltro;
+      const matchEstado  = !this.estadoFiltro  || t.estado         === this.estadoFiltro;
 
-      const okPerfil  = !this.perfilFiltro  || t.nombre_perfil  === this.perfilFiltro;
-      const okUsuario = !this.usuarioFiltro || t.nombre_usuario === this.usuarioFiltro;
-      const okEstado  = !this.estadoFiltro  || t.estado         === this.estadoFiltro;
+      const ini = new Date(t.fecha_inicio);
+      const fin = new Date(t.fecha_fin);
+      const matchDesde = !desde || fin >= desde;
+      const matchHasta = !hasta || ini <= hasta;
 
-      const inicio = new Date(t.fecha_inicio);
-      const fin    = new Date(t.fecha_fin);
-      const okDesde = !desde || fin    >= desde;
-      const okHasta = !hasta || inicio <= hasta;
-
-      return okPerfil && okUsuario && okEstado && okDesde && okHasta;
+      return matchPerfil && matchUsuario && matchEstado && matchDesde && matchHasta;
     });
 
     this.redibujarGantt();
   }
 
-  /* ---------- CREA UN NUEVO OBJETO GRAFICO ---------- */
-
+  /* ------------------ redibujo ------------------ */
   private redibujarGantt(): void {
-
-    /* 1) ocultar el chart para forzar destrucción */
-    this.ganttChart = null;
+    this.ganttChart = null;            // fuerza destrucción
     this.cdRef.detectChanges();
 
-    /* 2) construir filas */
     const cols = [
       { type:'string', label:'Task ID'   },
       { type:'string', label:'Task Name' },
@@ -116,36 +101,54 @@ export class GraficaGanttComponent implements OnInit {
       { type:'date'  , label:'End'       },
       { type:'number', label:'Duration'  },
       { type:'number', label:'% Compl.'  },
-      { type:'string', label:'Dependencies' }
+      { type:'string', label:'Dependencies' },
+      { type:'string', role:'tooltip', p:{html:true} }
     ];
 
     const rows = this.tareas.map(t => {
       const [y1,m1,d1] = t.fecha_inicio.split('-').map(Number);
       const [y2,m2,d2] = t.fecha_fin   .split('-').map(Number);
 
+      const pct = t.horas
+        ? Math.round((t.horas_incurridas / t.horas) * 100)
+        : 0;
+
+      const tooltip = `
+        <div style="padding:6px 8px">
+          <strong>${t.nombre}</strong><br>
+          ${t.nombre_perfil}<br>
+          ${t.fecha_inicio} → ${t.fecha_fin}<br>
+          <em>${pct}% completado</em>
+        </div>`;
+
       return {
         c: [
-          { v: `T${t.id}`         },
-          { v:  t.nombre          },
-          { v:  t.nombre_perfil   },
-          { v:  new Date(y1, m1-1, d1) },
-          { v:  new Date(y2, m2-1, d2) },
-          { v:  null              },   // duration
-          { v:  1                 },   // percent
-          { v:  null              }    // dependencias eliminadas
+          { v:`T${t.id}` },
+          { v: t.nombre },
+          { v: t.nombre_perfil },
+          { v: new Date(y1, m1-1, d1) },
+          { v: new Date(y2, m2-1, d2) },
+          { v: null },
+          { v: pct },
+          { v: null },
+          { v: tooltip }
         ]
       };
     });
 
-    /* 3) mostrar (o no) la gráfica */
     if (rows.length === 0) { return; }
 
     this.ganttChart = {
       chartType: 'Gantt',
       dataTable: { cols, rows },
       options  : {
-        height: Math.max(200, rows.length*30 + 60),
-        gantt : { trackHeight: 30 },
+        width :'100%',                 // ⬅️ ancho total
+        chartArea:{ width:'100%' },    // ⬅️ área de dibujo al 100 %
+        height : Math.max(200, rows.length * 30 + 60),
+        gantt  : {
+          trackHeight   : 30,
+          percentEnabled: true
+        },
         tooltip: { isHtml: true }
       }
     };
@@ -153,4 +156,3 @@ export class GraficaGanttComponent implements OnInit {
     this.cdRef.detectChanges();
   }
 }
-

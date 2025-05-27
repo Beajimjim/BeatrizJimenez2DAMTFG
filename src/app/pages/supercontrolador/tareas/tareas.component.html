@@ -74,10 +74,15 @@
           <ion-input type="date" formControlName="fecha_inicio" required></ion-input>
         </ion-item>
 
-        <ion-item>
-          <ion-label position="stacked">Fecha fin</ion-label>
-          <ion-input type="date" formControlName="fecha_fin" required></ion-input>
-        </ion-item>
+       <ion-item>
+        <ion-label position="stacked">Fecha fin</ion-label>
+          <ion-input
+            type="date"
+            formControlName="fecha_fin"
+            [min]="tareaForm.value.fecha_inicio"   
+            required>
+          </ion-input>
+      </ion-item>
 
         <ion-item>
           <ion-label position="stacked">Horas estimadas</ion-label>

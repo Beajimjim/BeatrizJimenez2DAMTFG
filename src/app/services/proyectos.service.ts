@@ -96,4 +96,12 @@ export class ProyectoService {
   actualizarHorasIncurridas(id: number, payload: { horas_incurridas: number, estado: string }) {
     return this.http.put(`${this.api}/tareas.php?incurrido=${id}`, payload);
   }
+
+  getProyectosDeEmpleado(id_usuario: number) {
+  // el backend debe devolver los proyectos donde el empleado tiene tareas asignadas
+  return this.http.post<any[]>(`${this.api}/proyectos.php`, {
+    id_usuario,
+    soloAsignados: true    // bandera que distinguirá la consulta en PHP
+  });
+}
 }
