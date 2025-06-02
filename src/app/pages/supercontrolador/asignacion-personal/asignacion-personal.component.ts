@@ -1,60 +1,75 @@
-// src/app/pages/supercontrolador/asignacion-personal/asignacion-personal.component.ts
+/* ==============================================================
+   COMPONENTE «ASIGNACIÓN DE PERSONAL» ― Smart3Z
+   Ruta   : src/app/pages/supercontrolador/asignacion-personal/
+   Archivo: asignacion-personal.component.ts
+   Objetivo:
+   - Listar tareas pendientes sin usuario y mostrar personal
+     compatible (perfil, disponibilidad, vacaciones).
+   - Al pulsar “Asignar” se actualiza la tarea y se refresca
+     la vista.
+   ============================================================== */
+
 import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule }             from '@angular/common';
 import { IonicModule, ToastController } from '@ionic/angular';
-import { ProyectoService, Tarea }        from 'src/app/services/proyectos.service';
-import { PersonalService, Personal }     from 'src/app/services/personal.service';
+import { finalize, firstValueFrom } from 'rxjs';
+
+import { ProyectoService, Tarea }      from 'src/app/services/proyectos.service';
+import { PersonalService, Personal }   from 'src/app/services/personal.service';
 
 @Component({
-  standalone: true,
-  selector: 'app-asignacion-personal',
-  imports: [CommonModule, IonicModule],
+  standalone : true,
+  selector   : 'app-asignacion-personal',
   templateUrl: './asignacion-personal.component.html',
-  styleUrls: ['./asignacion-personal.component.scss']
+  styleUrls  : ['./asignacion-personal.component.scss'],
+  imports    : [CommonModule, IonicModule]
 })
 export class AsignacionPersonalComponent implements OnInit {
+
+  /* ────────────── Inputs ────────────── */
   @Input() proyectoId!: number;
 
-  allTareas: Tarea[] = [];       // <-- TODAS las tareas del proyecto
-  tareas: Tarea[] = [];          // <-- sólo las pendientes y sin asignar
-  personal: Personal[] = [];
-  disponibles: Personal[] = [];
-  selectedTask?: Tarea;
+  /* ────────────── estado local ────────────── */
+  allTareas:    Tarea[]    = [];   // todas las tareas del proyecto
+  tareas:       Tarea[]    = [];   // pendientes + sin usuario
+  personal:     Personal[] = [];   // todo el personal del proyecto
+  disponibles:  Personal[] = [];   // personal filtrado
+  selectedTask?: Tarea;            // tarea seleccionada
 
   constructor(
     private proyectoSrv: ProyectoService,
     private personalSrv: PersonalService,
-    private toast: ToastController
+    private toast      : ToastController
   ) {}
 
-  ngOnInit() {
+  /* ------------------- ciclo ------------------- */
+  ngOnInit(): void {
     this.cargarDatos();
   }
 
-  cargarDatos() {
-    // 1A) Cargar TODAS las tareas
-    this.proyectoSrv.getTareasPorProyecto(this.proyectoId)
-      .subscribe(ts => {
-        this.allTareas = ts;
-        this.tareas = ts.filter(t =>
-          t.estado === 'pendiente' &&
-          t.id_usuario === null
-        );
+  /* ------------------- carga principal ------------------- */
+  private cargarDatos(): void {
+    /* 1 ) tareas */
+    this.proyectoSrv.getTareasPorProyecto(this.proyectoId).subscribe(ts => {
+      this.allTareas = ts;
 
-        // Si hay una tarea seleccionada, refrescar los disponibles
-        if (this.selectedTask) {
-          const stillExists = this.tareas.find(t => t.id === this.selectedTask!.id);
-          if (stillExists) {
-            this.onSelectTask(stillExists);
-          } else {
-            this.selectedTask = undefined;
-            this.disponibles = [];
-          }
-        }
-      });
+      // solo pendientes sin asignar
+      this.tareas = ts.filter(t =>
+        t.estado?.toLowerCase() === 'pendiente' &&
+        t.id_usuario == null
+      );
 
-    // 2) Cargar personal
+      // revalida la selección
+      if (this.selectedTask) {
+        const keep = this.tareas.find(t => t.id === this.selectedTask!.id);
+        keep ? this.onSelectTask(keep)
+             : (this.selectedTask = undefined, this.disponibles = []);
+      }
+    });
+
+    /* 2 ) personal */
     this.personalSrv.listarPorProyecto(this.proyectoId).subscribe(ps => {
+      console.table(ps);  
       this.personal = ps.map(p => ({
         ...p,
         disponibilidad: typeof p.disponibilidad === 'string'
@@ -67,62 +82,62 @@ export class AsignacionPersonalComponent implements OnInit {
     });
   }
 
-  onSelectTask(t: Tarea) {
+  /* ------------------- selección de tarea ------------------- */
+  onSelectTask(t: Tarea): void {
     this.selectedTask = t;
 
     if (t.id_perfil == null) {
       this.disponibles = [];
       return;
     }
-    const perfilId = t.id_perfil;
-    const taskStart = new Date(t.fecha_inicio);
-    const taskEnd   = new Date(t.fecha_fin);
+
+    const perfilId  = t.id_perfil;
+    const iniTarea  = new Date(t.fecha_inicio);
+    const finTarea  = new Date(t.fecha_fin);
 
     this.disponibles = this.personal.filter(p => {
+
+      /* 1. mismo perfil */
       if (p.id_perfil !== perfilId) return false;
 
-      const vacs = Array.isArray(p.vacaciones) ? p.vacaciones : [];
-      const choqueVac = vacs.some(v => {
-        const vacStart = new Date(v.inicio);
-        const vacEnd   = new Date(v.fin);
-        return taskStart <= vacEnd && taskEnd >= vacStart;
+      /* 2. no choque con vacaciones */
+      const solapaVac = (p.vacaciones ?? []).some(v => {
+        const iniV = new Date(v.inicio);
+        const finV = new Date(v.fin);
+        return iniTarea <= finV && finTarea >= iniV;
       });
-      if (choqueVac) return false;
+      if (solapaVac) return false;
 
-      const solapaTarea = this.allTareas.some(task => {
-        if (task.id_usuario == null) return false;
-        const otherStart = new Date(task.fecha_inicio);
-        const otherEnd   = new Date(task.fecha_fin);
-        return (
-          task.id_usuario === p.id_personal &&
-          otherStart <= taskEnd &&
-          otherEnd   >= taskStart
-        );
+      /* 3. no tenga ya otra tarea solapada */
+      const solapaTask = this.allTareas.some(task => {
+        if (task.id_usuario !== p.id_usuario) return false;
+
+        const iniO = new Date(task.fecha_inicio);
+        const finO = new Date(task.fecha_fin);
+        return iniO <= finTarea && finO >= iniTarea;
       });
-      if (solapaTarea) return false;
+      if (solapaTask) return false;
 
       return true;
     });
   }
 
-  async assign(p: Personal) {
+  /* ------------------- asignar ------------------- */
+  async assign(p: Personal): Promise<void> {
     if (!this.selectedTask) return;
 
-    await this.proyectoSrv
-      .actualizarTarea(
-        this.selectedTask.id,
-        { id_usuario: p.id_personal }
-      )
-      .toPromise();
 
-    const toast = await this.toast.create({
-      message: `"${this.selectedTask.nombre}" asignada a ${p.nombre}`,
-      duration: 2000,
-      color: 'success'
+    await firstValueFrom(      
+      this.proyectoSrv      
+        .actualizarTarea(this.selectedTask.id, { id_usuario: p.id_usuario }) // 👈 pasa el id_usuario correcto
+        .pipe(finalize(() => this.cargarDatos()))                            // refresca siempre
+    );
+
+    const t = await this.toast.create({
+      message : `"${this.selectedTask.nombre}" asignada a ${p.nombre}`,
+      duration: 1800,
+      color   : 'success'
     });
-    toast.present();
-
-    // 3) Volver a cargar todas las tareas y refrescar selección
-    this.cargarDatos();
+    t.present();
   }
 }

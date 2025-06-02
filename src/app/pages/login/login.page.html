@@ -1,38 +1,89 @@
+<!-- ==========================================================
+     PLANTILLA DE INICIO DE SESIÓN ― Smart3Z
+    
+     Descripción:
+     - Estructura la pantalla de autenticación.
+     - Sigue la guía de estilos establecida para el TFG.
+     ========================================================== -->
+
+<!-- ---------- CONTENEDOR PRINCIPAL ---------- *
+ *  ion-content es el lienzo que ocupa la vista completa.
+ *  La clase login-page aplica el fondo y el centrado global
+ *  (ver login.page.scss).
+ -->
 <ion-content fullscreen class="login-page">
+  <!-- ---------- GRID SECUNDARIO ---------- *
+   *  Segunda capa de centrado; garantiza que la tarjeta
+   *  permanezca en el medio incluso con teclados virtuales.
+   -->
   <div class="login-grid">
+
+    <!-- ---------- TARJETA DE LOGIN ---------- *
+     *  Agrupa el logo, el formulario y el pie de página.
+     *  Máximo 400 px de ancho para legibilidad.
+     -->
     <div class="login-card">
+
+      <!-- ========== LOGO ========== -->
       <div class="logo">
+        <!-- Icono (candado) que comunica seguridad -->
         <ion-icon name="lock-closed-outline"></ion-icon>
+        <!-- Nombre de la plataforma -->
         <h1>Smart3Z</h1>
       </div>
 
+      <!-- ========== FORMULARIO ========== -->
       <ion-card>
+        <!-- Cabecera con el título -->
         <ion-card-header>
           <ion-card-title>Iniciar sesión</ion-card-title>
         </ion-card-header>
 
+        <!-- Contenido principal: formulario reactivo -->
         <ion-card-content>
+          <!-- FormGroup enlazado en el componente TS; (ngSubmit) dispara login() -->
           <form [formGroup]="form" (ngSubmit)="login()">
+
+            <!-- -------- CAMPO E-MAIL -------- -->
             <ion-item>
               <ion-label position="floating">Correo electrónico</ion-label>
-              <ion-input formControlName="email" type="email" required></ion-input>
+              <ion-input
+                formControlName="email"
+                type="email"
+                required>
+              </ion-input>
             </ion-item>
 
+            <!-- -------- CAMPO CONTRASEÑA -------- -->
             <ion-item>
               <ion-label position="floating">Contraseña</ion-label>
-              <ion-input formControlName="contrasena" type="password" required></ion-input>
+              <ion-input
+                formControlName="contrasena"
+                type="password"
+                required>
+              </ion-input>
             </ion-item>
 
-            <ion-button expand="block" color="primary" class="ion-margin-top" type="submit">
+            <!-- -------- BOTÓN ENVIAR -------- *
+             *  expand="block" → ocupa 100 % del ancho
+             *  color="primary" → usa el color principal del tema
+             -->
+            <ion-button
+              expand="block"
+              color="primary"
+              class="ion-margin-top"
+              type="submit">
               Entrar
             </ion-button>
           </form>
         </ion-card-content>
       </ion-card>
 
+      <!-- ========== PIE DE PÁGINA ========== -->
       <div class="login-footer">
         <p>© Smart3Z 2025 · Todos los derechos reservados</p>
       </div>
-    </div>
-  </div>
+
+    </div> <!-- /login-card -->
+  </div>   <!-- /login-grid -->
 </ion-content>

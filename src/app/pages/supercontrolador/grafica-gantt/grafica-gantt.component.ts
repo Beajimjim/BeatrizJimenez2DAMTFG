@@ -1,4 +1,7 @@
-// src/app/pages/supercontrolador/grafica-gantt/grafica-gantt.component.ts
+/* ==========================================================
+   COMPONENTE «GRÁFICA GANTT» ― Smart3Z
+   ========================================================== */
+
 import { Component, Input, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule }   from '@angular/common';
 import { FormsModule }    from '@angular/forms';
@@ -21,7 +24,7 @@ export class GraficaGanttComponent implements OnInit {
   tareas        : any[] = [];
 
   perfiles: string[] = [];
-  usuarios: string[] = [];
+  usuarios: string[] = [];          // ← se ordenará dejando “Sin asignar” arriba
   estados : string[] = [];
 
   perfilFiltro      = '';
@@ -43,6 +46,8 @@ export class GraficaGanttComponent implements OnInit {
 
     this.proyectoSrv.getTareasPorProyecto(this.proyectoId).subscribe({
       next : tareas => {
+
+        /* ——— normalizamos valores nulos ——— */
         this.tareasOriginal = tareas.map((t:any) => ({
           ...t,
           nombre_perfil   : t.nombre_perfil  ?? 'Sin perfil',
@@ -51,9 +56,23 @@ export class GraficaGanttComponent implements OnInit {
           horas_incurridas: t.horas_incurridas ?? 0
         }));
 
-        this.perfiles = Array.from(new Set(this.tareasOriginal.map(t => t.nombre_perfil )));
-        this.usuarios = Array.from(new Set(this.tareasOriginal.map(t => t.nombre_usuario)));
-        this.estados  = Array.from(new Set(this.tareasOriginal.map(t => t.estado        )));
+        /* ——— opciones de filtros ——— */
+        this.perfiles = Array.from(
+          new Set(this.tareasOriginal.map(t => t.nombre_perfil ))
+        );
+
+        /*  ⇩⇩⇩  AQUÍ ESTÁ LA ÚNICA MODIFICACIÓN  ⇩⇩⇩ */
+        this.usuarios = Array.from(
+          new Set(this.tareasOriginal.map(t => t.nombre_usuario))
+        ).sort((a, b) => {
+          if (a === 'Sin asignar') return -1;
+          if (b === 'Sin asignar') return  1;
+          return a.localeCompare(b, 'es');   // orden alfabético español
+        });
+
+        this.estados  = Array.from(
+          new Set(this.tareasOriginal.map(t => t.estado))
+        );
 
         this.aplicarFiltros();
       },
@@ -90,7 +109,7 @@ export class GraficaGanttComponent implements OnInit {
 
   /* ------------------ redibujo ------------------ */
   private redibujarGantt(): void {
-    this.ganttChart = null;            // fuerza destrucción
+    this.ganttChart = null;
     this.cdRef.detectChanges();
 
     const cols = [
@@ -142,8 +161,8 @@ export class GraficaGanttComponent implements OnInit {
       chartType: 'Gantt',
       dataTable: { cols, rows },
       options  : {
-        width :'100%',                 // ⬅️ ancho total
-        chartArea:{ width:'100%' },    // ⬅️ área de dibujo al 100 %
+        width :'100%',
+        chartArea:{ width:'100%' },
         height : Math.max(200, rows.length * 30 + 60),
         gantt  : {
           trackHeight   : 30,

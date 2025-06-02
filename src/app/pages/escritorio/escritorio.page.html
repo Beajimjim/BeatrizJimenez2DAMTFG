@@ -1,6 +1,20 @@
+<!-- ==========================================================
+     PLANTILLA ESCRITORIO ― Smart3Z
+    
+     Descripción:
+     - Lista de proyectos del usuario autenticado.
+     - Botón flotante para crear proyectos y opción de borrar.
+     - Comentarios colocados con cuidado para no interferir
+       en data-binding ni en directivas Angular (*ngFor, etc.).
+     ========================================================== -->
+
+<!-- ---------- CABECERA ---------- -->
 <ion-header translucent>
   <ion-toolbar color="primary">
+    <!-- Nombre del usuario (sesion?.nombre) -->
     <ion-title slot="start">{{ sesion?.nombre }}</ion-title>
+
+    <!-- Botón de cierre de sesión -->
     <ion-buttons slot="end">
       <ion-button (click)="logout()">
         <ion-icon name="log-out-outline" slot="icon-only"></ion-icon>
@@ -9,33 +23,56 @@
   </ion-toolbar>
 </ion-header>
 
+<!-- ---------- CONTENIDO PRINCIPAL ---------- -->
 <ion-content fullscreen class="escritorio-content">
-  <div class="cards-grid">
-    <ion-card *ngFor="let  p of proyectos" [routerLink]="['/proyecto', p.id_proyecto]">
-      
-      <ion-card-header>
-        <ion-card-title>{{ p.nombre }}</ion-card-title>        
-        <ion-card-subtitle>Jefe: {{ p.jefe }}</ion-card-subtitle>
-      </ion-card-header>
 
-      <ion-card-content>
-        <p><strong>Departamento:</strong>{{ p.departamento }} </p>
-        <p><strong>Inicio:</strong> {{ p.fecha_inicio| date }}</p>   
-        <p><strong>Fin:</strong> {{  p.fecha_fin| date }}</p>      
-        <p><strong>Estado:</strong>{{ p.estado }} </p>
-        <ion-buttons slot="end" *ngIf="puedeEliminar">
-          <ion-button fill="clear" color="danger" (click)="confirmarBorrado(p)">
-            <ion-icon name="trash-outline"></ion-icon>
-          </ion-button>
-        </ion-buttons>
-      </ion-card-content>
-    </ion-card>
+  <!-- Grid que distribuye las tarjetas (ver SCSS para layout) -->
+  <div class="cards-grid">
+
+    <!-- Una tarjeta por proyecto -->
+    <ion-card
+  *ngFor="let p of proyectos"
+  [routerLink]="['/proyecto', p.id_proyecto]"
+  class="project-card">
+
+  <!-- ---- Cabecera ---- -->
+  <ion-card-header>
+    <ion-card-title>{{ p.nombre }}</ion-card-title>
+    <ion-card-subtitle>Jefe: {{ p.jefe }}</ion-card-subtitle>
+  </ion-card-header>
+
+  <!-- ---- Contenido ---- -->
+  <ion-card-content>
+
+    <p><strong>Departamento:</strong> {{ p.departamento }}</p>
+    <p><strong>Inicio:</strong> {{ p.fecha_inicio | date }}</p>
+    <p><strong>Fin:</strong> {{ p.fecha_fin | date }}</p>
+    <p><strong>Estado:</strong> {{ p.estado }}</p>
+
+    <!-- Botón de papelera (solo con permisos)-->
+    <ion-button
+      *ngIf="puedeEliminar"
+      fill="clear"
+      color="danger"
+      size="small"
+      (click)="confirmarBorrado(p, $event)">
+      <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+    </ion-button>
+
+  </ion-card-content>
+
+</ion-card>
   </div>
 
-  <!-- Botón flotante -->
-  <ion-fab *ngIf="puedeCrear" vertical="bottom" horizontal="end" slot="fixed">
+  <!-- ---------- FAB (Crear proyecto) ---------- -->
+  <ion-fab
+    *ngIf="puedeCrear"
+    vertical="bottom"
+    horizontal="end"
+    slot="fixed">
     <ion-fab-button (click)="abrirModal()">
       <ion-icon name="add-outline"></ion-icon>
     </ion-fab-button>
   </ion-fab>
+
 </ion-content>

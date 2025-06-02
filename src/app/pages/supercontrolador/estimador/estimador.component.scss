@@ -1,31 +1,56 @@
-.estimador-header {
-    text-align: center;
-    margin-bottom: 1rem;
-  
-    h2 {
-      font-size: 1.4rem;
-      color: var(--ion-color-primary);
-      margin-bottom: 0.5rem;
-    }
-  }
-  
-  .custom-segment {
-    --background: #f4f5f8;
-    --indicator-color: var(--ion-color-primary);
-    --color-checked: var(--ion-color-primary);
-  }
-  .custom-segment {
-    --background: var(--ion-color-light);
-    --indicator-color: transparent; // 👈 ELIMINA la línea inferior
-    --color-checked: var(--ion-color-primary); // texto activo
-    --color: var(--ion-color-medium); // texto inactivo
-    --border-radius: 6px;
-    margin-bottom: 1rem;
-  }
+/* ==========================================================
+   ESTILOS «ESTIMADOR DE RECURSOS» ― Smart3Z
+   Archivo : estimador.component.scss
+   Descripción:
+   - Cabecera centrada con título y color de marca.
+   - Segmento (ion-segment) personalizado como barra de tabs.
+   - Icono de ayuda con cursor “pointer”.
+   ========================================================== */
 
-  .info-icon {
-    margin-left: 4px;
-    font-size: 1.25rem;
-    vertical-align: middle;
-    cursor: pointer;
+/* ---------- 1. CABECERA DEL ESTIMADOR ---------- *
+ *  • Centra el texto (h2).
+ *  • Aplica margen inferior para separar del contenido.
+ */
+.estimador-header {
+  text-align: center;
+  margin-bottom: 1rem;
+
+  h2 {
+    font-size: 1.4rem;
+    color: var(--ion-color-primary);
+    margin-bottom: 0.5rem;
   }
+}
+
+/* ---------- 2. SEGMENTO PERSONALIZADO ---------- *
+ *  Primer bloque: estilos base de compatibilidad/fallback.
+ */
+.custom-segment {
+  --background: #f4f5f8;
+  --indicator-color: var(--ion-color-primary);
+  --color-checked: var(--ion-color-primary);
+}
+
+/*  Segundo bloque: ajustes finales que prevalecen
+ *  (en SCSS, la segunda declaración sobrescribe la primera).
+ */
+.custom-segment {
+  --background: var(--ion-color-light);        /* Fondo claro */
+  --indicator-color: transparent;             /* Oculta línea inferior */
+  --color-checked: var(--ion-color-primary);   /* Texto tab activo */
+  --color: var(--ion-color-medium);            /* Texto tab inactivo */
+  --border-radius: 6px;                        /* Bordes redondeados */
+  margin-bottom: 1rem;                         /* Espaciado inferior */
+}
+
+/* ---------- 3. ICONO “INFO” ---------- *
+ *  • Margen a la izquierda para separarlo del texto.
+ *  • Tamaño ligeramente mayor para destacar.
+ *  • Cursor puntero para denotar que es clicable.
+ */
+.info-icon {
+  margin-left: 4px;
+  font-size: 1.25rem;
+  vertical-align: middle;
+  cursor: pointer;
+}

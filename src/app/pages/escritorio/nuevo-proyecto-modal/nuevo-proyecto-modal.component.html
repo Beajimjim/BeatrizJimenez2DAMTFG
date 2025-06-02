@@ -1,6 +1,18 @@
+<!-- ==========================================================
+     MODAL «NUEVO PROYECTO» ― Smart3Z
+     
+     Descripción:
+     - Formulario reactivo para crear un nuevo proyecto.
+     - Incluye selects de PM y Departamento cargados dinámicamente.
+     - Usa ion-input de tipo date para las fechas.
+     ========================================================== -->
+
+<!-- ---------- CABECERA DEL MODAL ---------- -->
 <ion-header translucent>
   <ion-toolbar color="primary">
     <ion-title>Nuevo Proyecto</ion-title>
+
+    <!-- Botón "X" para cerrar el modal -->
     <ion-buttons slot="end">
       <ion-button (click)="cerrarModal()">
         <ion-icon slot="icon-only" name="close-outline"></ion-icon>
@@ -9,44 +21,55 @@
   </ion-toolbar>
 </ion-header>
 
+<!-- ---------- CONTENIDO PRINCIPAL ---------- -->
 <ion-content class="ion-padding" fullscreen>
+  <!-- FormGroup enlazado desde el componente TS -->
   <form [formGroup]="formProyecto">
 
-    <!-- nombre -->
+    <!-- ===== NOMBRE DEL PROYECTO ===== -->
     <ion-item>
       <ion-label position="stacked">Nombre</ion-label>
       <ion-input formControlName="nombre"></ion-input>
     </ion-item>
 
-    <!-- jefe PM -->
+    <!-- ===== JEFE DE PROYECTO (PM) =====
+         Opciones cargadas vía servicio; se abre en pop-over. -->
     <ion-item>
       <ion-label position="stacked">Jefe de Proyecto</ion-label>
       <ion-select formControlName="id_jefe_pm" interface="popover">
-        <ion-select-option *ngFor="let pm of pms" [value]="pm.id_usuario">
+        <ion-select-option
+          *ngFor="let pm of pms"
+          [value]="pm.id_usuario">
           {{ pm.nombre }}
         </ion-select-option>
       </ion-select>
     </ion-item>
 
-    <!-- departamento -->
+    <!-- ===== DEPARTAMENTO ===== -->
     <ion-item>
       <ion-label position="stacked">Departamento</ion-label>
       <ion-select formControlName="id_departamento" interface="popover">
-        <ion-select-option *ngFor="let d of departamentos" [value]="d.id_departamento">
+        <ion-select-option
+          *ngFor="let d of departamentos"
+          [value]="d.id_departamento">
           {{ d.nombre }}
         </ion-select-option>
       </ion-select>
     </ion-item>
 
-    <!-- fechas y estado -->
+    <!-- ===== FECHA DE INICIO ===== -->
     <ion-item>
       <ion-label position="stacked">Fecha inicio</ion-label>
       <ion-input type="date" formControlName="fecha_inicio"></ion-input>
     </ion-item>
+
+    <!-- ===== FECHA DE FIN ===== -->
     <ion-item>
       <ion-label position="stacked">Fecha fin</ion-label>
       <ion-input type="date" formControlName="fecha_fin"></ion-input>
     </ion-item>
+
+    <!-- ===== ESTADO DEL PROYECTO ===== -->
     <ion-item>
       <ion-label position="stacked">Estado</ion-label>
       <ion-select formControlName="estado" interface="popover">
@@ -56,10 +79,18 @@
       </ion-select>
     </ion-item>
 
-    <ion-button expand="block" color="primary" (click)="guardarProyecto()">
+    <!-- ===== BOTONES DE ACCIÓN ===== -->
+    <ion-button
+      expand="block"
+      color="primary"
+      (click)="guardarProyecto()">
       Guardar
     </ion-button>
-    <ion-button expand="block" fill="outline" (click)="cerrarModal()">
+
+    <ion-button
+      expand="block"
+      fill="outline"
+      (click)="cerrarModal()">
       Cancelar
     </ion-button>
 

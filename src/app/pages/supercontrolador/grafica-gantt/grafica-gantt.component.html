@@ -1,4 +1,13 @@
+<!-- ==========================================================
+     PÁGINA / COMPONENTE «GRÁFICA GANTT» ― Smart3Z
+     - Muestra filtros y un gráfico de Gantt interactivo
+       (Google Charts) para las tareas del proyecto.
+     - Incluye pop-over con ayuda contextual.
+     ========================================================== -->
+
 <ion-content class="ion-padding">
+
+  <!-- ---------- TÍTULO + ICONO DE AYUDA ---------- -->
   <h1 class="ion-text-center">
     Gráfica Gantt
     <ion-icon
@@ -9,10 +18,14 @@
     </ion-icon>
   </h1>
 
-  <!-- Pop-over con la explicación -->
+  <!-- ---------- POP-OVER EXPLICATIVO ---------- *
+   *  • trigger="gantt-info" → abre al hacer click en el icono.
+   *  • show-backdrop="false" → sin oscurecer fondo.
+   *  • side="bottom"         → aparece debajo del icono.
+   -->
   <ion-popover
     trigger="gantt-info"
-    trigger-action="click"     
+    trigger-action="click"
     show-backdrop="false"
     size="auto"
     side="bottom">
@@ -25,89 +38,122 @@
 
         <p><strong>Cómo se usa:</strong></p>
         <ul>
-          <li>Ajusta los filtros de <em>Perfil</em>, <em>Usuario</em>, <em>Estado</em> o fechas para acotar la vista.</li>
-          <li>Pasa el cursor / toca las barras para ver detalles de la tarea.</li>
-          <li>Pulsa <em>Limpiar filtros</em> para volver a la vista completa.</li>
+          <li>Ajusta los filtros de <em>Perfil</em>, <em>Usuario</em>, <em>Estado</em> o fechas.</li>
+          <li>Pasa el cursor / toca las barras para ver detalles.</li>
+          <li>Pulsa <em>Limpiar filtros</em> para restablecer la vista.</li>
         </ul>
       </ion-content>
     </ng-template>
   </ion-popover>
-  <!-- ====== FILTROS ====== -->
+
+  <!-- ==========================================================
+       F I L T R O S
+       ========================================================== -->
   <ion-grid>
     <ion-row>
-      <!-- Perfil -->
+
+      <!-- PERFIL ------------------------------------------------ -->
       <ion-col size="12" size-md="6" size-lg="3">
         <ion-item>
           <ion-label position="stacked">Perfil</ion-label>
-          <ion-select [(ngModel)]="perfilFiltro"
-                      (ionChange)="aplicarFiltros()"
-                      interface="popover">
+          <ion-select
+            [(ngModel)]="perfilFiltro"
+            (ionChange)="aplicarFiltros()"
+            interface="popover">
             <ion-select-option value="">Todos</ion-select-option>
-            <ion-select-option *ngFor="let p of perfiles" [value]="p">{{ p }}</ion-select-option>
+            <ion-select-option
+              *ngFor="let p of perfiles"
+              [value]="p">{{ p }}</ion-select-option>
           </ion-select>
         </ion-item>
       </ion-col>
 
-      <!-- Usuario -->
+      <!-- USUARIO ---------------------------------------------- -->
       <ion-col size="12" size-md="6" size-lg="3">
         <ion-item>
           <ion-label position="stacked">Usuario</ion-label>
-          <ion-select [(ngModel)]="usuarioFiltro"
-                      (ionChange)="aplicarFiltros()"
-                      interface="popover">
+          <ion-select
+            [(ngModel)]="usuarioFiltro"
+            (ionChange)="aplicarFiltros()"
+            interface="popover">
             <ion-select-option value="">Todos</ion-select-option>
-            <ion-select-option *ngFor="let u of usuarios" [value]="u">{{ u }}</ion-select-option>
+            <ion-select-option
+              *ngFor="let u of usuarios"
+              [value]="u">{{ u }}</ion-select-option>
           </ion-select>
         </ion-item>
       </ion-col>
 
-      <!-- Estado -->
+      <!-- ESTADO ----------------------------------------------- -->
       <ion-col size="12" size-md="6" size-lg="2">
         <ion-item>
           <ion-label position="stacked">Estado</ion-label>
-          <ion-select [(ngModel)]="estadoFiltro"
-                      (ionChange)="aplicarFiltros()"
-                      interface="popover">
+          <ion-select
+            [(ngModel)]="estadoFiltro"
+            (ionChange)="aplicarFiltros()"
+            interface="popover">
             <ion-select-option value="">Todos</ion-select-option>
-            <ion-select-option *ngFor="let e of estados" [value]="e">{{ e | titlecase }}</ion-select-option>
+            <ion-select-option
+              *ngFor="let e of estados"
+              [value]="e">{{ e | titlecase }}</ion-select-option>
           </ion-select>
         </ion-item>
       </ion-col>
 
-      <!-- Fechas -->
+      <!-- FECHA DESDE ------------------------------------------ -->
       <ion-col size="6" size-md="3" size-lg="2">
         <ion-item>
           <ion-label position="stacked">Desde</ion-label>
-          <ion-input type="date"
-                     [(ngModel)]="fechaInicioFiltro"
-                     (ionChange)="aplicarFiltros()"></ion-input>
+          <ion-input
+            type="date"
+            [(ngModel)]="fechaInicioFiltro"
+            (ionChange)="aplicarFiltros()">
+          </ion-input>
         </ion-item>
       </ion-col>
 
+      <!-- FECHA HASTA ------------------------------------------ -->
       <ion-col size="6" size-md="3" size-lg="2">
         <ion-item>
           <ion-label position="stacked">Hasta</ion-label>
-          <ion-input type="date"
-                     [(ngModel)]="fechaFinFiltro"
-                     (ionChange)="aplicarFiltros()"></ion-input>
+          <ion-input
+            type="date"
+            [(ngModel)]="fechaFinFiltro"
+            (ionChange)="aplicarFiltros()">
+          </ion-input>
         </ion-item>
       </ion-col>
+
     </ion-row>
 
-    <!-- Botón limpiar -->
+    <!-- ---------- BOTÓN LIMPIAR FILTROS ---------- -->
     <ion-row class="ion-justify-content-end ion-margin-top">
       <ion-col size="12" size-md="3">
-        <ion-button expand="block" fill="outline" color="medium" (click)="limpiarFiltros()">
+        <ion-button
+          expand="block"
+          fill="outline"
+          color="medium"
+          (click)="limpiarFiltros()">
           Limpiar filtros
         </ion-button>
       </ion-col>
     </ion-row>
   </ion-grid>
 
-  <!-- ====== GANTT o mensaje ====== -->
-  <google-chart *ngIf="ganttChart" [data]="ganttChart!"></google-chart>
+  <!-- ==========================================================
+       G R Á F I C A   /   M E N S A J E
+       ========================================================== -->
 
-  <ion-note *ngIf="!ganttChart" color="warning">
+  <!-- Gantt renderizado mediante Google Charts -->
+  <google-chart
+    *ngIf="ganttChart"
+    [data]="ganttChart!">
+  </google-chart>
+
+  <!-- Mensaje cuando el filtro devuelve cero resultados -->
+  <ion-note
+    *ngIf="!ganttChart"
+    color="warning">
     No hay tareas que coincidan con los filtros seleccionados.
   </ion-note>
 

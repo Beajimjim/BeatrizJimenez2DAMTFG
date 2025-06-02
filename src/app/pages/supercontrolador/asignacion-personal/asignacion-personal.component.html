@@ -1,9 +1,19 @@
+<!-- ==========================================================
+     COMPONENTE «ASIGNACIÓN DE PERSONAL» ― Smart3Z
+     Descripción:
+     - Pantalla/modal donde el PM asigna tareas pendientes
+       al personal disponible de un proyecto.
+     - Incluye pop-over explicativo, lista de tareas y lista
+       de empleados filtrados.
+     ========================================================== -->
+
 <ion-content class="ion-padding">
 
-  <!-- TÍTULO -->
+  <!-- ---------- TÍTULO + ÍCONO DE AYUDA ---------- -->
   <div class="ion-text-center">
     <h1>
       Asignación de Personal
+      <!-- Icono “i” que abre el pop-over -->
       <ion-icon
         id="asignacion-info"
         name="information-circle-outline"
@@ -13,7 +23,11 @@
     </h1>
   </div>
 
-  <!-- Pop-over explicativo -->
+  <!-- ---------- POP-OVER EXPLICATIVO ---------- *
+   *  • trigger        : id del ion-icon.
+   *  • trigger-action : abre al hacer click.
+   *  • side="bottom"  : aparece debajo del icono.
+   -->
   <ion-popover
     trigger="asignacion-info"
     trigger-action="click"
@@ -35,13 +49,22 @@
     </ng-template>
   </ion-popover>
 
+  <!-- ==========================================================
+       G R I D   D E   C O N T E N I D O
+       ----------------------------------------------------------
+       • Col A (size="6") → Lista de tareas pendientes.
+       • Col B (size="6") → Personal disponible para la tarea
+                             seleccionada.
+       ========================================================== -->
   <ion-grid>
     <ion-row>
 
-      <!-- A: Lista de tareas pendientes -->
+      <!-- ===== COLUMNA A: TAREAS PENDIENTES ===== -->
       <ion-col size="6">
         <h3>Tareas pendientes</h3>
+
         <ion-list>
+          <!-- *ngFor → recorre array “tareas” -->
           <ion-item
             *ngFor="let t of tareas"
             [color]="t === selectedTask ? 'light' : undefined"
@@ -55,11 +78,15 @@
         </ion-list>
       </ion-col>
 
-      <!-- B: Lista de personal filtrado -->
+      <!-- ===== COLUMNA B: PERSONAL DISPONIBLE ===== -->
       <ion-col size="6">
+
+        <!-- Si hay tarea seleccionada, mostramos la lista -->
         <ng-container *ngIf="selectedTask; else selMsg">
           <h3>Personal disponible</h3>
+
           <ion-list>
+            <!-- Recorre array “disponibles” -->
             <ion-item *ngFor="let p of disponibles">
               <ion-label>
                 <h4>{{ p.nombre }}</h4>
@@ -70,12 +97,16 @@
                   </span>
                 </p>
               </ion-label>
+
+              <!-- Botón para asignar este empleado a la tarea -->
               <ion-button slot="end" size="small" (click)="assign(p)">
                 Asignar
               </ion-button>
             </ion-item>
           </ion-list>
         </ng-container>
+
+        <!-- Mensaje “Selecciona una tarea” (template alternativo) -->
         <ng-template #selMsg>
           <p class="ion-padding">Selecciona una tarea primero.</p>
         </ng-template>

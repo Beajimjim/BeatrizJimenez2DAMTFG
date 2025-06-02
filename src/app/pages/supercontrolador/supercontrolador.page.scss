@@ -1,30 +1,54 @@
-$bg-light: #f3f6fa;
-$radius: 16px;
+/* ============================================================
+   Variables globales
+   ============================================================ */
+$bg-light: #f3f6fa;   // Color de fondo general
+$radius: 16px;        // Radio de borde para las tarjetas
 
-/* fondo general */
+/* ============================================================
+   Fondo general de la vista principal del supercontrolador
+   ============================================================ */
 .sc-main {
   --background: $bg-light;
-  padding: 32px;
+  padding: 32px;  // Espaciado interno general
 }
 
+/* ============================================================
+   Estilo para tarjetas blancas con sombra
+   ============================================================ */
 .sc-card {
-  background: #fff;
-  border-radius: $radius;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-  padding: 32px;
-  h1 { margin: 0 0 12px; font-size: 26px; font-weight: 600; color: #333; }
-  p  { margin: 0;        color: #555; }
+  background: #fff;                 // Fondo blanco
+  border-radius: $radius;          // Bordes redondeados
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08); // Sombra sutil
+  padding: 32px;                   // Espaciado interno
+
+  // Título principal dentro de la tarjeta
+  h1 {
+    margin: 0 0 12px;
+    font-size: 26px;
+    font-weight: 600;
+    color: #333;
+  }
+
+  // Párrafos dentro de la tarjeta
+  p {
+    margin: 0;
+    color: #555;
+  }
 }
 
-/* aspecto seleccionado en el menú */
+/* ============================================================
+   Estilo para ítems seleccionados en el menú lateral
+   ============================================================ */
 ion-item.item-selected {
-  --background: rgba(0,0,0,0.1);
+  --background: rgba(0,0,0,0.1); // Fondo gris claro para marcar selección
 }
 
-
+/* ============================================================
+   Icono de información junto al título
+   ============================================================ */
 .info-icon {
-  margin-left: 4px;
-  font-size: 1.25rem;
-  vertical-align: middle;
-  cursor: pointer;
+  margin-left: 4px;         // Espaciado respecto al texto
+  font-size: 1.25rem;       // Tamaño ligeramente mayor
+  vertical-align: middle;  // Alineación con el texto
+  cursor: pointer;         // Cursor de mano al pasar por encima
 }

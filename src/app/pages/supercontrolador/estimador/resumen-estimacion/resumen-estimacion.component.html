@@ -1,37 +1,68 @@
+<!-- ==========================================================
+     COMPONENTE «RESUMEN DE LA ESTIMACIÓN» ― Smart3Z
+     Descripción:
+     - Tarjeta que muestra el resultado de la estimación
+       de costes y horas por perfil.
+     - Incluye desglose costo base / social y un botón para
+       persistir la estimación.
+     - Se oculta el contenido si no hay datos (ngIf).
+     ========================================================== -->
+
 <ion-card>
+
+  <!-- ---------- CABECERA ---------- -->
   <ion-card-header>
     <ion-card-title>Resumen de la Estimación</ion-card-title>
   </ion-card-header>
+
+  <!-- ---------- CUERPO ---------- *
+   *  • *ngIf verifica que existan resultados.
+   *  • resultadoPorPerfil es un array generado en el componente TS.
+   -->
   <ion-card-content *ngIf="resultadoPorPerfil.length">
 
-    <p><strong>Total de horas del proyecto:</strong> {{ totalHoras }}</p>
+    <!-- Total global de horas -->
+    <p>
+      <strong>Total de horas del proyecto:</strong>
+      {{ totalHoras }}
+    </p>
 
+    <!-- ===== LISTA DE PERFILES ===== -->
     <ion-list>
+      <!-- ng-container evita generar nodos extra en el DOM -->
       <ng-container *ngFor="let r of resultadoPorPerfil">
         <ion-item>
-          <ion-label>
+          <ion-label class="ion-text-wrap">
+
+            <!-- Nombre del perfil -->
             <h2>{{ r.nombre }}</h2>
+
+            <!-- Detalles de la estimación -->
             <p>Horas necesarias: {{ r.horas }}</p>
             <p>Plantilla mínima requerida: {{ r.plantillaFinal }}</p>
 
+            <!-- Coste total para este perfil -->
             <p>
               💰 <strong>Coste estimado total:</strong>
               {{ r.coste | currency:'EUR':'symbol':'1.2-2' }}
             </p>
 
+            <!-- Desglose coste base + social -->
             <p class="ion-text-wrap" style="margin-left: 1em;">
-              ▪️ Coste base (horas × tarifa):
+              ▪️ Coste base&nbsp;(horas × tarifa):
               {{
                 (r.coste / (1 + calendario.socialRate / 100))
                   | currency:'EUR':'symbol':'1.2-2'
               }}<br />
-              ▪️ Coste social (%):
+              ▪️ Coste social&nbsp;(%):
               {{
-                (r.coste * calendario.socialRate / (100 + calendario.socialRate))
+                (r.coste * calendario.socialRate /
+                  (100 + calendario.socialRate))
                   | currency:'EUR':'symbol':'1.2-2'
               }}
             </p>
 
+            <!-- Chip de capacidad -->
             <ion-chip [color]="r.hayCapacidad ? 'success' : 'danger'">
               <ion-icon
                 slot="start"
@@ -39,8 +70,8 @@
                   r.hayCapacidad
                     ? 'checkmark-circle-outline'
                     : 'close-circle-outline'
-                "
-              ></ion-icon>
+                ">
+              </ion-icon>
               <ion-label>
                 {{
                   r.hayCapacidad
@@ -54,12 +85,17 @@
       </ng-container>
     </ion-list>
 
+    <!-- Coste total de la estimación -->
     <ion-note color="primary">
       <strong>Coste total estimado: </strong>
       {{ costeTotal | currency:'EUR':'symbol':'1.2-2' }}
     </ion-note>
 
-    <ion-button expand="block" color="success" (click)="guardar()">
+    <!-- Botón para guardar la estimación -->
+    <ion-button
+      expand="block"
+      color="success"
+      (click)="guardar()">
       <ion-icon slot="start" name="save-outline"></ion-icon>
       Guardar estimación
     </ion-button>

@@ -1,63 +1,86 @@
+<!-- ==========================================================
+     COMPONENTE «INCURRIDO POR TAREA» ― Smart3Z
+     Descripción:
+     - Permite registrar las horas reales trabajadas en cada
+       tarea y actualizar su estado.
+     - Muestra un pop-over de ayuda, tarjetas por tarea y
+       controles para introducir horas y cambiar estado.
+     ========================================================== -->
+
 <ion-content class="ion-padding">
-<div class="ion-text-center">
-  <h1>
-    Incurrido por Tarea
-    <ion-icon
-      id="incurrido-info"
-      name="information-circle-outline"
-      class="info-icon"
-      aria-label="Información sobre el incurrido">
-    </ion-icon>
-  </h1>   
-</div>
 
-<!-- Pop-over explicativo -->
-<ion-popover
-  trigger="incurrido-info"
-  trigger-action="click"     
-  size="auto"
-  side="bottom">
+  <!-- ---------- TÍTULO + ICONO DE AYUDA ---------- -->
+  <div class="ion-text-center">
+    <h1>
+      Incurrido por Tarea
+      <ion-icon
+        id="incurrido-info"
+        name="information-circle-outline"
+        class="info-icon"
+        aria-label="Información sobre el incurrido">
+      </ion-icon>
+    </h1>
+  </div>
 
-  <ng-template>
-    <ion-content class="ion-padding" style="min-width:260px">
-      <h3 class="ion-no-margin">Gestor de Horas Incurridas</h3>
+  <!-- ---------- POP-OVER EXPLICATIVO ---------- -->
+  <ion-popover
+    trigger="incurrido-info"
+    trigger-action="click"
+    size="auto"
+    side="bottom">
 
-      <p>Permite registrar el avance real sobre las tareas asignadas.</p>
+    <ng-template>
+      <ion-content class="ion-padding" style="min-width:260px">
+        <h3 class="ion-no-margin">Gestor de Horas Incurridas</h3>
 
-      <p><strong>Cómo se usa:</strong></p>
-      <ul>
-        <li>Visualiza el progreso de cada tarea del proyecto.</li>
-        <li>Introduce cuántas horas se han trabajado.</li>
-        <li>Actualiza el estado de la tarea si corresponde.</li>
-        <li>Pulsa <em>Guardar cambios</em> para registrar el avance.</li>
-      </ul>
-    </ion-content>
-  </ng-template>
-</ion-popover>
+        <p>Permite registrar el avance real sobre las tareas asignadas.</p>
 
+        <p><strong>Cómo se usa:</strong></p>
+        <ul>
+          <li>Visualiza el progreso de cada tarea del proyecto.</li>
+          <li>Introduce cuántas horas se han trabajado.</li>
+          <li>Actualiza el estado de la tarea si corresponde.</li>
+          <li>Pulsa <em>Guardar cambios</em> para registrar el avance.</li>
+        </ul>
+      </ion-content>
+    </ng-template>
+  </ion-popover>
 
-  <ion-note *ngIf="tareas.length === 0" color="warning" class="ion-text-center">
+  <!-- ---------- MENSAJE SIN TAREAS ---------- -->
+  <ion-note
+    *ngIf="tareas.length === 0"
+    color="warning"
+    class="ion-text-center">
     ❗ No hay tareas activas para este proyecto.
   </ion-note>
 
+  <!-- ---------- LISTADO DE TARJETAS ---------- -->
   <ion-card *ngFor="let t of tareas">
+
+    <!-- CABECERA DE LA TAREA -->
     <ion-card-header>
       <ion-card-title>{{ t.nombre }}</ion-card-title>
-      <ion-card-subtitle>{{ t.fecha_inicio }} → {{ t.fecha_fin }}</ion-card-subtitle>
+      <ion-card-subtitle>
+        {{ t.fecha_inicio }} → {{ t.fecha_fin }}
+      </ion-card-subtitle>
     </ion-card-header>
 
+    <!-- CONTENIDO: DATOS + CONTROLES -->
     <ion-card-content>
+
+      <!-- Datos actuales -->
       <p><strong>Asignado a:</strong> {{ t.nombre_usuario || 'Sin asignar' }}</p>
       <p><strong>Horas totales:</strong> {{ t.horas }}</p>
       <p><strong>Horas incurridas:</strong> {{ t.horas_incurridas }}</p>
       <p><strong>Restantes:</strong> {{ t.horas - (t.horas_incurridas ?? 0) }}</p>
 
+      <!-- Barra de progreso -->
       <ion-progress-bar
         [value]="(t.horas_incurridas ?? 0) / t.horas"
         color="tertiary">
       </ion-progress-bar>
 
-      <!-- Editar horas incurridas -->
+      <!-- INPUT horas incurridas -->
       <ion-item class="ion-margin-top">
         <ion-label position="stacked">Actualizar horas incurridas</ion-label>
         <ion-input
@@ -68,7 +91,7 @@
         </ion-input>
       </ion-item>
 
-      <!-- Cambiar estado -->
+      <!-- SELECT estado -->
       <ion-item>
         <ion-label position="stacked">Estado</ion-label>
         <ion-select [(ngModel)]="t.editEstado">
@@ -78,6 +101,7 @@
         </ion-select>
       </ion-item>
 
+      <!-- BOTÓN GUARDAR -->
       <ion-button
         expand="block"
         color="primary"
@@ -85,6 +109,8 @@
         (click)="guardarCambios(t)">
         Guardar cambios
       </ion-button>
+
     </ion-card-content>
   </ion-card>
+
 </ion-content>

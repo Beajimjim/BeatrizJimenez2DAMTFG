@@ -1,24 +1,43 @@
-/* ============================================================== */
-/*  Estilos del componente – sin CSS inline                        */
-/* ============================================================== */
+/* ==========================================================
+   ESTILOS «HISTÓRICO DE ESTIMACIONES» ― Smart3Z
+   Archivo : historico-estimacion.component.scss
+   Descripción:
+   - Ajusta la posición del segmento (tabs) para que quede
+     fijo al hacer scroll.
+   - Elimina la altura máxima del contenido de cada accordion
+     para que se expanda por completo (y delegar el scroll
+     al ion-content padre).
+   ========================================================== */
 
-/* 1 ▸ Segmento pegado arriba (puedes quitar `position: sticky`
-       si prefieres que también desaparezca al hacer scroll)       */
-       .segment-wrapper {
-        position: sticky;
-        top: 0;
-        z-index: 10;
-      }
-      
-      /* 2 ▸ Accordion sin scroll interno (solo tendremos el del
-             ion-content padre)                                          */
-      ion-accordion {
-        --ion-accordion-content-max-height: none;
-      }
-      
-      ion-accordion[expanded]::part(content) {
-        max-height: none !important;
-        height: auto !important;
-        overflow: visible !important;
-      }
-      
+/* ---------- 1. SEGMENTO FIJO (STICKY) ---------- *
+ *  • .segment-wrapper envuelve el ion-segment/ion-segment-button.
+ *  • position:sticky  → se queda “pegado” al top del viewport
+ *    mientras el usuario hace scroll dentro del ion-content.
+ *  • z-index:10       → se asegura de quedar por encima de
+ *    los accordions abiertos.
+ *  • Si prefieres que el segmento también se desplace con el
+ *    contenido, elimina estas reglas.
+ */
+.segment-wrapper {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+/* ---------- 2. ACORDEONES SIN SCROLL INTERNO ---------- *
+ *  Por defecto, ion-accordion establece una altura máxima
+ *  para su slot="content" y crea scroll propio. En esta vista
+ *  queremos que el único scroll sea el del ion-content padre,
+ *  así que anulamos esa restricción:
+ */
+ion-accordion {
+  --ion-accordion-content-max-height: none; /* quita límite */
+}
+
+/* Cuando el accordion está expandido, forzamos que el
+   contenido se vea completamente sin recortes. */
+ion-accordion[expanded]::part(content) {
+  max-height: none !important;
+  height: auto !important;
+  overflow: visible !important;
+}

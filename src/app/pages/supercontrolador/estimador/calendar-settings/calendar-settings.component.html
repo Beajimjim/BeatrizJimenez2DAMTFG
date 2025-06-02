@@ -1,24 +1,59 @@
+<!-- ==========================================================
+     COMPONENTE «CONFIGURACIÓN DE JORNADA» ― Smart3Z
+     Descripción:
+     - Formulario reactivo para definir parámetros globales
+       de la jornada laboral: horas diarias, días semanales
+       y coste social.
+     - Se integra dentro de un ion-card para dar coherencia
+       visual con el resto de la aplicación.
+     ========================================================== -->
+
 <ion-card>
+
+  <!-- ---------- CABECERA ---------- -->
   <ion-card-header>
     <ion-card-title>Configuración de Jornada</ion-card-title>
   </ion-card-header>
 
+  <!-- ---------- CUERPO / FORMULARIO ---------- *
+   *  El ion-card-content actúa como contenedor del
+   *  formulario reactivo (formGroup="form").
+   -->
   <ion-card-content [formGroup]="form">
+
+    <!-- ===== HORAS POR DÍA ===== -->
     <ion-item>
       <ion-label position="stacked">Horas por día</ion-label>
-      <ion-input type="number" formControlName="horasPorDia" min="1" max="24"></ion-input>
+      <ion-input
+        type="number"
+        formControlName="horasPorDia"
+        min="1"
+        max="24">
+      </ion-input>
     </ion-item>
 
+    <!-- ===== DÍAS LABORABLES POR SEMANA ===== -->
     <ion-item>
       <ion-label position="stacked">Días laborables por semana</ion-label>
-      <ion-input type="number" formControlName="diasLaborablesPorSemana" min="1" max="7"></ion-input>
+      <ion-input
+        type="number"
+        formControlName="diasLaborablesPorSemana"
+        min="1"
+        max="7">
+      </ion-input>
     </ion-item>
 
-    <!-- Eliminados festivos y vacaciones a nivel global -->
+    <!-- Nota: Campos para festivos y vacaciones globales
+         se han eliminado según requisitos del TFG. -->
 
+    <!-- ===== COSTE SOCIAL ===== *
+         Formato: porcentaje sobre tarifa (0-100).
+         Se permite decimal (step="0.1").
+     -->
     <ion-item>
       <ion-label position="stacked">
-        Coste social (% sobre tarifa)<br><small>Ejemplo: 30 para 30%</small>
+        Coste social (% sobre tarifa)<br>
+        <small>Ejemplo: 30 para 30&nbsp;%</small>
       </ion-label>
       <ion-input
         type="number"
@@ -29,6 +64,10 @@
       </ion-input>
     </ion-item>
 
+    <!-- ===== BOTÓN GUARDAR ===== *
+         • expand="block" → ancho completo.
+         • disabled       → sólo se habilita si el form es válido.
+     -->
     <ion-button
       expand="block"
       color="primary"
@@ -36,5 +75,6 @@
       [disabled]="form.invalid">
       Guardar configuración
     </ion-button>
+
   </ion-card-content>
 </ion-card>

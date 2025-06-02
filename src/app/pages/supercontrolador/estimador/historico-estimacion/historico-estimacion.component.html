@@ -1,36 +1,49 @@
-<!-- ===============================================================
-     Histórico de estimaciones (sin <ion-content>)
-     Se monta dentro del ion-content del page que lo use.
-     ===============================================================-->
+<!-- ==========================================================
+     COMPONENTE «HISTÓRICO DE ESTIMACIONES» ― Smart3Z
+     Archivo: historial-estimaciones.component.html
+     Descripción:
+     - Muestra una lista (acordeón) con todas las estimaciones
+       guardadas para un proyecto.
+     - Permite descargar cada estimación en PDF.
+     - NO incluye <ion-content>; se inserta dentro del
+       ion-content de la página que lo utilice.
+     ==========================================================-->
 
-<!-- Barra de título (scrolla con el resto) -->
+<!-- ---------- BARRA DE TÍTULO (se desplaza con el contenido) ---------- -->
 <ion-toolbar color="primary">
   <ion-title>Histórico de estimaciones</ion-title>
 </ion-toolbar>
 
-<!-- VACÍO -------------------------------------------------------->
+<!-- ========== MENSAJE LISTA VACÍA ========== -->
 <ng-container *ngIf="!items?.length">
-  <ion-note color="medium" class="ion-text-center ion-padding">
+  <ion-note
+    color="medium"
+    class="ion-text-center ion-padding">
     Aún no hay estimaciones guardadas para este proyecto.
   </ion-note>
 </ng-container>
 
-<!-- LISTA -------------------------------------------------------->
+<!-- ========== LISTA DE ESTIMACIONES ========== -->
 <ion-accordion-group *ngIf="items?.length">
 
+  <!-- *ngFor recorre el array “items” -->
   <ion-accordion *ngFor="let e of items">
-    <!-- CABECERA -------------------------------------------------->
+
+    <!-- ---------- CABECERA DEL ACORDEÓN ---------- -->
     <ion-item slot="header" button detail>
       <ion-label class="ion-text-wrap">
+        <!-- Fecha de generación (formato corto) -->
         <h3 class="ion-no-margin">
           {{ e.fecha_generada | date : 'short' }}
         </h3>
+        <!-- Totales principales -->
         <p class="ion-no-margin">
           Horas: {{ e.total_horas }} &nbsp;–&nbsp;
           Coste: {{ e.coste_total | currency : 'EUR' }}
         </p>
       </ion-label>
 
+      <!-- Botón para descargar el PDF de la estimación -->
       <ion-button
         fill="clear"
         slot="end"
@@ -41,12 +54,13 @@
       </ion-button>
     </ion-item>
 
-    <!-- CONTENIDO ------------------------------------------------->
+    <!-- ---------- CONTENIDO DEL ACORDEÓN ---------- -->
     <div
       slot="content"
       class="ion-padding"
       [attr.id]="'estimacion-' + e.id_estimacion">
 
+      <!-- ===== TARJETA RESUMEN ===== -->
       <ion-card>
         <ion-card-header>
           <ion-card-title>Resumen de la Estimación</ion-card-title>
@@ -54,20 +68,25 @@
 
         <ion-card-content>
 
+          <!-- Total global de horas -->
           <p><strong>Total de horas del proyecto:</strong> {{ e.total_horas }}</p>
 
+          <!-- LISTADO DE PERFILES / RESUMENES -->
           <ion-list>
+            <!-- Recorre “resumen” (array de perfiles) -->
             <ion-item *ngFor="let r of e.resumen">
               <ion-label class="ion-text-wrap">
                 <h2>{{ r.nombre }}</h2>
                 <p>Horas necesarias: {{ r.horas }}</p>
                 <p>Plantilla mínima requerida: {{ r.plantillaFinal }}</p>
 
+                <!-- Coste total por perfil -->
                 <p>
                   💰 <strong>Coste estimado total:</strong>
                   {{ r.coste | currency:'EUR':'symbol':'1.2-2' }}
                 </p>
 
+                <!-- Desglose: base + social -->
                 <p class="ion-text-wrap" style="margin-left: 1em;">
                   ▪️ Coste base (horas × tarifa):
                   {{
@@ -81,6 +100,7 @@
                   }}
                 </p>
 
+                <!-- Chip visual de capacidad -->
                 <ion-chip [color]="r.hayCapacidad ? 'success' : 'danger'">
                   <ion-icon
                     slot="start"
@@ -88,8 +108,8 @@
                       r.hayCapacidad
                         ? 'checkmark-circle-outline'
                         : 'close-circle-outline'
-                    "
-                  ></ion-icon>
+                    ">
+                  </ion-icon>
                   <ion-label>
                     {{
                       r.hayCapacidad
@@ -102,6 +122,7 @@
             </ion-item>
           </ion-list>
 
+          <!-- Notas finales -->
           <ion-note color="primary">
             <strong>Coste total estimado: </strong>
             {{ e.coste_total | currency : 'EUR' }}
@@ -113,14 +134,18 @@
         </ion-card-content>
       </ion-card>
 
-      <!-- (opcional) Calendario
+      <!-- ===== SECCIÓN CALENDARIO (opcional, comentada) =====
       <ion-card class="ion-margin-top">
-        <ion-card-header><ion-card-title>Calendario</ion-card-title></ion-card-header>
-        <ion-card-content><pre>{{ e.calendario | json }}</pre></ion-card-content>
+        <ion-card-header>
+          <ion-card-title>Calendario</ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+          <pre>{{ e.calendario | json }}</pre>
+        </ion-card-content>
       </ion-card>
       -->
 
-    </div>
+    </div> <!-- /slot="content" -->
   </ion-accordion>
 
 </ion-accordion-group>

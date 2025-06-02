@@ -1,8 +1,18 @@
+<!-- ==========================================================
+     PÁGINA / COMPONENTE «ESTIMADOR DE RECURSOS» ― Smart3Z
+     Descripción:
+     - Permite configurar la jornada laboral, ver un resumen
+       de horas y costes, y consultar el histórico.
+     - Usa un ion-segment como “tabs” para alternar vistas.
+     ========================================================== -->
+
 <ion-content class="ion-padding">
 
-  <!-- Título centrado -->
+  <!-- ---------- TÍTULO + ICONO DE AYUDA ---------- -->
   <h1 class="ion-text-center">
     Estimador de Recursos
+
+    <!-- Icono que abre pop-over con la explicación -->
     <ion-icon
       id="estimator-info"
       name="information-circle-outline"
@@ -11,10 +21,14 @@
     </ion-icon>
   </h1>
 
-  <!-- Pop-over con la explicación -->
+  <!-- ---------- POP-OVER EXPLICATIVO ---------- *
+   *  • trigger="estimator-info"  → id del ion-icon.
+   *  • show-backdrop="false"     → sin fondo oscurecido.
+   *  • side="bottom"             → aparece debajo del icono.
+   -->
   <ion-popover
     trigger="estimator-info"
-    trigger-action="click"     
+    trigger-action="click"
     show-backdrop="false"
     size="auto"
     side="bottom">
@@ -22,12 +36,14 @@
     <ng-template>
       <ion-content class="ion-padding" style="min-width:260px">
         <h3 class="ion-no-margin">Estimador de Recursos</h3>
+
         <p>Esta herramienta te permite:</p>
         <ul>
           <li>Configurar la <strong>jornada laboral</strong> y los festivos.</li>
           <li>Asignar <strong>perfiles</strong> y horas a cada tarea.</li>
           <li>Calcular la <strong>duración</strong> y el <strong>coste total</strong>.</li>
         </ul>
+
         <p class="ion-margin-top">
           <strong>Cómo se usa:</strong><br>
           1. Define calendario y horario en la pestaña <em>Jornada</em>.<br>
@@ -37,14 +53,22 @@
     </ng-template>
   </ion-popover>
 
-  <!-- Separador -->
-  <div style="height: 1px; background-color: var(--ion-color-light); margin: 16px 0;"></div>
+  <!-- ---------- SEPARADOR VISUAL ---------- -->
+  <div
+    style="
+      height: 1px;
+      background-color: var(--ion-color-light);
+      margin: 16px 0;">
+  </div>
 
-  <!-- Tabs tipo segment -->
+  <!-- ---------- TABS (ION-SEGMENT) ---------- *
+   *  • [(ngModel)]="segmentoActual" enlaza con TS.
+   *  • Cada button cambia el contenido mostrado.
+   -->
   <ion-segment [(ngModel)]="segmentoActual">
     <ion-segment-button value="jornada">
       <ion-label>Jornada</ion-label>
-    </ion-segment-button>    
+    </ion-segment-button>
 
     <ion-segment-button value="resumen">
       <ion-label>Resumen</ion-label>
@@ -54,16 +78,38 @@
       <ion-label>Histórico</ion-label>
     </ion-segment-button>
   </ion-segment>
-  
 
-  <!-- Separador -->
-  <div style="height: 1px; background-color: var(--ion-color-light); margin: 16px 0;"></div>
-
-  <!-- Contenido dinámico -->
-  <div [ngSwitch]="segmentoActual">
-    <app-calendar-settings *ngSwitchCase="'jornada'"></app-calendar-settings>    
-    <app-resumen-estimacion *ngSwitchCase="'resumen'"  [proyectoId]="proyectoId"></app-resumen-estimacion>
-    <app-historico-estimacion *ngSwitchCase="'historico'" [proyectoId]="proyectoId"></app-historico-estimacion>
+  <!-- ---------- SEGUNDO SEPARADOR ---------- -->
+  <div
+    style="
+      height: 1px;
+      background-color: var(--ion-color-light);
+      margin: 16px 0;">
   </div>
- 
+
+  <!-- ---------- CONTENIDO DINÁMICO ---------- *
+   *  Se muestra uno de los tres componentes hijos según
+   *  el valor de “segmentoActual”.
+   -->
+  <div [ngSwitch]="segmentoActual">
+
+    <!-- Pestaña «Jornada» -->
+    <app-calendar-settings
+      *ngSwitchCase="'jornada'">
+    </app-calendar-settings>
+
+    <!-- Pestaña «Resumen» -->
+    <app-resumen-estimacion
+      *ngSwitchCase="'resumen'"
+      [proyectoId]="proyectoId">
+    </app-resumen-estimacion>
+
+    <!-- Pestaña «Histórico» -->
+    <app-historico-estimacion
+      *ngSwitchCase="'historico'"
+      [proyectoId]="proyectoId">
+    </app-historico-estimacion>
+
+  </div>
+
 </ion-content>

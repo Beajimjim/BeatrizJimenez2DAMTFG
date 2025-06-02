@@ -1,25 +1,53 @@
+/* ==========================================================
+   ESTILOS «ESCRITORIO» ― Smart3Z
+   Archivo : escritorio.page.scss
+   Descripción:
+   - Define la maqueta del escritorio de proyectos.
+   - Incluye grid responsive, padding coherente y
+     micro-animaciones en las tarjetas.
+   ========================================================== */
+
+/* ---------- CONTENEDOR DEL CONTENIDO ---------- *
+ *  Espaciado interno global para que los elementos
+ *  no peguen con los bordes de la pantalla.
+ */
 .escritorio-content {
-    padding: 16px;
+  padding: 16px;
+}
+
+/* ---------- GRID DE TARJETAS ---------- *
+ *  • display:grid        → activa CSS Grid.
+ *  • auto-fill / minmax  → crea tantas columnas como
+ *    quepan, con ancho mínimo de 280 px y máximo 1fr.
+ *  • gap:16 px           → separación uniforme.
+ */
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+/* ---------- TARJETA (ion-card) ---------- *
+ *  Interacción visual:
+ *  - cursor:pointer      → indica que es clicable.
+ *  - transition:transform→ suaviza la animación.
+ *  - &:hover             → eleva y proyecta sombra.
+ */
+ion-card {
+  transition: transform 0.2s ease;
+  cursor: pointer;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
   }
-  
-  .cards-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 16px;
-  }
-  
-  ion-card {
-    transition: transform 0.2s ease;
-    cursor: pointer;
-  
-    &:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
-    }
-  }
-  
-  ion-toolbar {
-    --padding-start: 16px;
-    --padding-end: 16px;
-  }
-  
+}
+
+/* ---------- BARRA SUPERIOR (ion-toolbar) ---------- *
+ *  Ajusta el padding lateral para alinear contenido
+ *  con el grid principal (16 px a ambos lados).
+ */
+ion-toolbar {
+  --padding-start: 16px;
+  --padding-end:   16px;
+}
